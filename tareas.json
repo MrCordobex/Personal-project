@@ -7,5 +7,14 @@
         "prioridad": "Importante",
         "tipo": "Examen",
         "estado": "Pendiente"
+    },
+    {
+        "id": 1768426357,
+        "titulo": "Tarea prueba",
+        "fecha": "2026-01-15",
+        "fecha_fin": null,
+        "prioridad": "Importante",
+        "tipo": "Examen",
+        "estado": "Pendiente"
     }
 ]
