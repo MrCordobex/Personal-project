@@ -298,7 +298,7 @@ def render_tarjeta_gestion(t):
     bg_opacity = "0.5" if t['estado'] == 'Completada' else "1"
     
     with st.container(border=True):
-        c_main, c_actions = st.columns([5, 1])
+        c_main, c_actions = st.columns([5, 2]) # Ampliar columna acciones
         
         with c_main:
             # Título grande
@@ -317,8 +317,23 @@ def render_tarjeta_gestion(t):
             st.markdown(f"<span style='color:{color_prio}; font-weight:bold'>{t['prioridad']}</span> | {t['tipo']} | **{f_display}**", unsafe_allow_html=True)
             
         with c_actions:
-            # Botón expander para editar
-            with st.popover("✏️ Editar"):
+            # Botones de acción en columnas pequeñas
+            ca1, ca2, ca3 = st.columns(3)
+            
+            # 1. Completar / Desmarcar
+            if t['estado'] != 'Completada':
+                if ca1.button("✅", key=f"ok_main_{t['id']}", help="Marcar como completada"):
+                    t['estado'] = 'Completada'
+                    gestionar_tareas('actualizar', tarea_actualizada=t)
+                    st.rerun()
+            else:
+                if ca1.button("↩️", key=f"undo_main_{t['id']}", help="Deshacer (Marcar pendiente)"):
+                    t['estado'] = 'Pendiente'
+                    gestionar_tareas('actualizar', tarea_actualizada=t)
+                    st.rerun()
+
+            # 2. Editar
+            with ca2.popover("✏️"):
                 with st.form(f"edit_main_{t['id']}"):
                     e_titulo = st.text_input("Título", t['titulo'])
                     
@@ -337,7 +352,7 @@ def render_tarjeta_gestion(t):
                     e_estado = st.selectbox("Estado", ["Pendiente", "Completada"], index=0 if t['estado']=="Pendiente" else 1)
                     e_prioridad = st.selectbox("Prioridad", ["Normal", "Importante", "Urgente"], index=["Normal", "Importante", "Urgente"].index(t.get('prioridad', 'Normal')))
                     
-                    if st.form_submit_button("Guardar Cambios"):
+                    if st.form_submit_button("Guardar"):
                         t['titulo'] = e_titulo
                         t['estado'] = e_estado
                         t['prioridad'] = e_prioridad
@@ -347,7 +362,8 @@ def render_tarjeta_gestion(t):
                         st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "✏️ Tarea actualizada"}
                         st.rerun()
                         
-            if st.button("🗑️", key=f"del_main_{t['id']}", help="Borrar tarea"):
+            # 3. Borrar
+            if ca3.button("🗑️", key=f"del_main_{t['id']}", help="Borrar tarea"):
                 gestionar_tareas('borrar', id_tarea_eliminar=t['id'])
                 st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "🗑️ Tarea eliminada"}
                 st.rerun()
