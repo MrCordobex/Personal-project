@@ -331,11 +331,11 @@ def main():
 
     # --- TAB 3: Todas las Tareas (Gestión) ---
     with tab3:
-        st.subheader("Gestión Global")
+        st.subheader("Gestión Global y Edición")
         
         # Convertir a DataFrame para mejor visualización si hay muchas
         if not tareas:
-            st.info("No hay tareas registradas.")
+            st.info("No hay tareas registradas (o han sido eliminadas por antigüedad).")
         else:
             for t in tareas:
                 # Calcular días restantes si hay deadline
@@ -353,11 +353,26 @@ def main():
                     except:
                         pass
 
-                with st.expander(f"{t['titulo']} ({t['estado']}) {dias_restantes_str}"):
+                titulo_expander = f"{t['titulo']} ({t['estado']}) {dias_restantes_str}"
+                
+                with st.expander(titulo_expander):
                     # Formulario de edición
                     with st.form(f"edit_{t['id']}"):
                         e_titulo = st.text_input("Título", t['titulo'])
-                        e_estado = st.selectbox("Estado", ["Pendiente", "Completada"], index=0 if t['estado']=="Pendiente" else 1)
+                        
+                        cols_edit = st.columns(2)
+                        
+                        # Detectar tipo para mostrar el campo de fecha adecuado
+                        es_deadline = t.get('fecha_fin') is not None
+                        
+                        if es_deadline:
+                            fecha_actual_obj = datetime.strptime(t['fecha_fin'], "%Y-%m-%d").date()
+                            e_fecha = cols_edit[0].date_input("Modificar Deadline", fecha_actual_obj)
+                        else:
+                            fecha_actual_obj = datetime.strptime(t['fecha'], "%Y-%m-%d").date()
+                            e_fecha = cols_edit[0].date_input("Modificar Fecha", fecha_actual_obj)
+                        
+                        e_estado = cols_edit[1].selectbox("Estado", ["Pendiente", "Completada"], index=0 if t['estado']=="Pendiente" else 1)
                         e_prioridad = st.selectbox("Prioridad", ["Normal", "Importante", "Urgente"], index=["Normal", "Importante", "Urgente"].index(t.get('prioridad', 'Normal')))
                         
                         col_save, col_del = st.columns([1, 4])
@@ -365,6 +380,12 @@ def main():
                             t['titulo'] = e_titulo
                             t['estado'] = e_estado
                             t['prioridad'] = e_prioridad
+                            # Actualizar fecha según el tipo
+                            if es_deadline:
+                                t['fecha_fin'] = str(e_fecha)
+                            else:
+                                t['fecha'] = str(e_fecha)
+                                
                             if gestionar_tareas('actualizar', tarea_actualizada=t):
                                 st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "✏️ Tarea actualizada en GitHub."}
                             else:
