@@ -153,9 +153,9 @@ def main():
         elif tipo == "error":
             st.error(texto)
         st.session_state["mensaje_global"] = None
-        
-    # Cargar datos
+       # --- GESTOR DE DATOS (PERSISTENCIA) ---
     tareas = gestionar_tareas('leer')
+    horario_dinamico = gestionar_horario('leer')
     
     # --- LIMPIEZA AUTOMÁTICA ---
     hoy_real = get_madrid_date()
@@ -163,14 +163,21 @@ def main():
     hubo_cambios_limpieza = False
     
     for t in tareas:
-        fecha_ref_str = t.get('fecha_fin') if t.get('fecha_fin') else t.get('fecha')
+        # Si es completada y vieja, fuera
+        es_vieja = False
         try:
-            fecha_ref = datetime.strptime(fecha_ref_str, "%Y-%m-%d").date()
-            if fecha_ref >= hoy_real:
-                tareas_filtradas.append(t)
-            else:
-                hubo_cambios_limpieza = True
-        except:
+            if t.get('fecha'):
+                f_t = datetime.strptime(t['fecha'], "%Y-%m-%d").date()
+                if f_t < hoy_real: es_vieja = True
+            if t.get('fecha_fin'): # Si tiene deadline y ya pasó hace tiempo también
+                f_f = datetime.strptime(t['fecha_fin'], "%Y-%m-%d").date()
+                if f_f < hoy_real: es_vieja = True
+        except: pass
+            
+        if t['estado'] == 'Completada' and es_vieja:
+            # Solo borrar si ya pasó el día
+             hubo_cambios_limpieza = True
+        else:
             tareas_filtradas.append(t)
             
     if hubo_cambios_limpieza:
@@ -182,7 +189,7 @@ def main():
     with st.sidebar:
         st.header("👁️ Navegación")
         # Menú ampliado
-        opciones_navegacion = ["Diaria", "Semanal", "Mensual", "---", "➕ Nueva Tarea", "📋 Gestionar Todas"]
+        opciones_navegacion = ["Diaria", "Semanal", "Mensual", "---", "➕ Nueva Tarea", "➕ Nuevo Evento/Horario", "📋 Gestionar Todas"]
         vista_actual = st.radio("Ir a:", opciones_navegacion, index=0, label_visibility="collapsed")
         
         st.divider()
@@ -192,17 +199,83 @@ def main():
 
     # --- ENRUTADOR DE VISTAS ---
     if vista_actual == "Diaria":
-        render_vista_diaria(tareas, fecha_seleccionada)
+        render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico)
     elif vista_actual == "Semanal":
-        render_vista_semanal(tareas, fecha_seleccionada)
+        render_vista_semanal(tareas, fecha_seleccionada, horario_dinamico)
     elif vista_actual == "Mensual":
-        render_vista_mensual(tareas, fecha_seleccionada)
+        render_vista_mensual(tareas, fecha_seleccionada, horario_dinamico)
     elif vista_actual == "➕ Nueva Tarea":
         render_vista_nueva_tarea()
+    elif vista_actual == "➕ Nuevo Evento/Horario":
+        render_vista_nuevo_horario()
     elif vista_actual == "📋 Gestionar Todas":
         render_vista_gestionar_todas(tareas)
 
 # --- IMPLEMENTACIÓN DE VISTAS ---
+
+def render_vista_nuevo_horario():
+    st.subheader("➕ Añadir Nuevo Evento u Horario")
+    
+    with st.container(border=True):
+        c_conf, c_form = st.columns([1, 3])
+        
+        with c_conf:
+            st.info("Tipo de Entrada")
+            tipo_entrada = st.radio("¿Qué vas a añadir?", ["🔄 Rutina Semanal", "📅 Evento Único"], key="type_schedule")
+            st.caption("Rutina: Se repite todas las semanas (ej. Gym, Clases).\nEvento: Ocurre un día específico.")
+            
+        with c_form:
+            titulo = st.text_input("Título / Asignatura", placeholder="Ej: Gimnasio, Matemáticas...")
+            ubicacion = st.text_input("Ubicación / Aula", placeholder="Ej: Gofit, Aula 23, Online...")
+            
+            c1, c2 = st.columns(2)
+            
+            # Lógica Rutina vs Evento
+            dias_seleccionados = []
+            fecha_evento = None
+            
+            if "Rutina" in tipo_entrada:
+                st.write("Selecciona los días:")
+                cols_dias = st.columns(7)
+                dias_abv = ["L", "M", "X", "J", "V", "S", "D"]
+                for i, col in enumerate(cols_dias):
+                    if col.checkbox(dias_abv[i], key=f"d_{i}"):
+                        dias_seleccionados.append(i)
+            else:
+                fecha_evento = st.date_input("Fecha del Evento", get_madrid_date())
+                
+            # Horas
+            st.write("horario:")
+            ch1, ch2, ch3 = st.columns([1, 1, 1])
+            h_inicio = ch1.time_input("Hora Inicio", datetime.strptime("10:00", "%H:%M").time())
+            h_fin = ch2.time_input("Hora Fin", datetime.strptime("11:00", "%H:%M").time())
+            # dia_completo = ch3.checkbox("Todo el día") # Por simplificar, horario siempre tiene horas por ahora
+            
+            st.write("")
+            if st.button("💾 Guardar Horario", type="primary", use_container_width=True):
+                if not titulo:
+                    st.error("El título es obligatorio")
+                    return
+                
+                if "Rutina" in tipo_entrada and not dias_seleccionados:
+                    st.error("Selecciona al menos un día para la rutina.")
+                    return
+
+                nuevo_item = {
+                    "id": int(get_madrid_time().timestamp()),
+                    "titulo": titulo,
+                    "ubicacion": ubicacion,
+                    "tipo": "Rutina" if "Rutina" in tipo_entrada else "Evento",
+                    "es_rutina": "Rutina" in tipo_entrada,
+                    "dias_semana": dias_seleccionados,
+                    "fecha": str(fecha_evento) if fecha_evento else None,
+                    "hora_inicio": str(h_inicio.strftime("%H:%M")),
+                    "hora_fin": str(h_fin.strftime("%H:%M"))
+                }
+                
+                gestionar_horario('crear', nuevo_item=nuevo_item)
+                st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "💾 Horario guardado correctamente"}
+                st.rerun()
 
 def render_vista_nueva_tarea():
     st.subheader("➕ Añadir Nueva Tarea")
@@ -412,18 +485,44 @@ def render_tarjeta_gestion(t):
                 st.rerun()
 
 
-def render_vista_diaria(tareas, fecha_seleccionada):
+def render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico):
     col_horario, col_tareas = st.columns([1, 2])
     
     with col_horario:
         st.subheader("🏫 Horario")
         dia_semana = fecha_seleccionada.weekday()
+        
+        # 1. Clases Fijas (Hardcoded)
         clases_hoy = HORARIO_FIJO.get(dia_semana, [])
+        
+        # 2. Horario Dinámico (JSON)
+        # Rutinas de este dia o Eventos de esta fecha
+        for item in horario_dinamico:
+            es_hoy = False
+            if item.get('es_rutina'):
+                if dia_semana in item.get('dias_semana', []):
+                    es_hoy = True
+            else:
+                if item.get('fecha') == str(fecha_seleccionada):
+                    es_hoy = True
+            
+            if es_hoy:
+                clases_hoy.append({
+                    "hora": f"{item['hora_inicio']} - {item['hora_fin']}",
+                    "asignatura": item['titulo'],
+                    "aula": item['ubicacion'],
+                    "es_dinamico": True # Flag por si queremos pintar distinto
+                })
+        
+        # Ordenar por hora inicio
+        clases_hoy.sort(key=lambda x: x['hora'].split(' - ')[0])
+
         if clases_hoy:
             for clase in clases_hoy:
+                bg_style = "border: 1px solid #444" if clase.get('es_dinamico') else "" # Diferenciar visualmente? De momento sutil
                 st.success(f"**{clase['hora']}**\n\n{clase['asignatura']}\n\n📍 {clase['aula']}")
         else:
-            st.info("No hay clases programadas.")
+            st.info("No hay clases ni eventos programados.")
     
     with col_tareas:
         st.subheader(f"📝 Tareas: {fecha_seleccionada.strftime('%A %d')}")
@@ -520,7 +619,7 @@ def render_vista_diaria(tareas, fecha_seleccionada):
                         else:
                             c2.write("✅")
 
-def render_vista_semanal(tareas, fecha_base):
+def render_vista_semanal(tareas, fecha_base, horario_dinamico):
     st.subheader(f"Vista Semanal")
     
     start_of_week = fecha_base - timedelta(days=fecha_base.weekday())
@@ -554,10 +653,34 @@ def render_vista_semanal(tareas, fecha_base):
                 <div style='font-size:1.2em; padding: 5px;'>{dia_actual.day}</div>
             </div>""", unsafe_allow_html=True)
             
-            # 1. Horario
+            # 1. Horario (Mergeado)
             clases = HORARIO_FIJO.get(i, [])
+            
+            # Dinamico
+            for item in horario_dinamico:
+                es_este_dia = False
+                if item.get('es_rutina'):
+                     if i in item.get('dias_semana', []): es_este_dia = True
+                else:
+                     if item.get('fecha') == str(dia_actual): es_este_dia = True
+                
+                if es_este_dia:
+                    # Formato compatible con lo que espera el render
+                    clases.append({
+                        "asignatura": item['titulo'],
+                        "hora": item['hora_inicio'], # Solo hora inicio para compactar
+                        "es_dinamico": True
+                    })
+            
+            # Ordenar por hora (si es posible parsear)
+            # Simplificamos orden, asumimos orden de insercion o mix
+            
             for c in clases:
-                st.markdown(f"<div style='background-color: {COLORES_TIPO['Clase']}; color: white; padding: 4px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>🏫 {c['asignatura']}</div>", unsafe_allow_html=True)
+                # Color diferente si es Gym/Rutina?
+                bg = COLORES_TIPO['Clase']
+                if c.get('es_dinamico'): bg = "#2E8B57" # Verde SeaGreen para cosas extra
+                
+                st.markdown(f"<div style='background-color: {bg}; color: white; padding: 4px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>🏫 {c['asignatura']}</div>", unsafe_allow_html=True)
             
             # 2. Tareas
             for t in tareas:
@@ -586,7 +709,7 @@ NOMBRES_MESES = {
 }
 DIAS_SEMANA_ABR = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
 
-def render_vista_mensual(tareas, fecha_base):
+def render_vista_mensual(tareas, fecha_base, horario_dinamico):
     nombre_mes = NOMBRES_MESES.get(fecha_base.month, "Mes")
     st.subheader(f"Vista Mensual - {nombre_mes} {fecha_base.year}")
     
@@ -658,10 +781,25 @@ def render_vista_mensual(tareas, fecha_base):
                 
                 # 2. CONTENIDO (Horario + Tareas)
                 
-                # Horario
+                # Horario Mergeado
                 clases = HORARIO_FIJO.get(i, [])
+                for item in horario_dinamico:
+                    es_este_dia_m = False
+                    if item.get('es_rutina'):
+                         if i in item.get('dias_semana', []): es_este_dia_m = True
+                    else:
+                         if item.get('fecha') == str(dia_actual): es_este_dia_m = True
+                    
+                    if es_este_dia_m:
+                        clases.append({
+                            "asignatura": item['titulo'],
+                            "es_dinamico": True
+                        })
+
                 for c in clases:
-                    html_celda += f"<div style='background-color: {COLORES_TIPO['Clase']}; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; font-size: 0.7em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>🏫 {c['asignatura']}</div>"
+                    bg = COLORES_TIPO['Clase']
+                    if c.get('es_dinamico'): bg = "#2E8B57"
+                    html_celda += f"<div style='background-color: {bg}; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; font-size: 0.7em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>🏫 {c['asignatura']}</div>"
                 
                 # Tareas
                 for t in tareas:
