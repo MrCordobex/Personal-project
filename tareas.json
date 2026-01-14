@@ -1,14 +1,5 @@
 [
     {
-        "id": 1768426346,
-        "titulo": "Tarea prueba",
-        "fecha": "2026-01-15",
-        "fecha_fin": null,
-        "prioridad": "Importante",
-        "tipo": "Examen",
-        "estado": "Pendiente"
-    },
-    {
         "id": 1768426683,
         "titulo": "Tarea prueba 2",
         "fecha": "2026-01-16",
