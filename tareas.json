@@ -13,7 +13,7 @@
         "titulo": "Prueba futura",
         "prioridad": "Urgente",
         "tipo": "Entrega",
-        "estado": "Completada",
+        "estado": "Pendiente",
         "fecha": "2026-01-14",
         "fecha_fin": "2026-01-23"
     },
