@@ -41,8 +41,7 @@ def get_madrid_date():
 REPO_NAME = "MrCordobex/Personal-project"  # <-- ¡ACTUALIZA ESTO CON TU REPO!
 FILE_PATH = "tareas.json"
 
-    6: []  # Domingo
-}
+
 
 COLORES_PRIORIDAD = {
     "Importante": "orange",
