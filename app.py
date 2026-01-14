@@ -164,27 +164,117 @@ def main():
         with col_tareas:
             st.subheader(f"📝 Tareas para el {fecha_seleccionada}")
             
-            # Filtrar tareas por fecha
-            tareas_hoy = [t for t in tareas if t.get('fecha') == str(fecha_seleccionada) and t.get('estado') != 'Completada']
+            # --- LÓGICA DE FILTRADO Y PRIORIDAD DINÁMICA ---
+            tareas_hoy_list = []
+            tareas_proximas_list = []
             
-            if not tareas_hoy:
-                st.write("✅ No tienes tareas pendientes para hoy.")
-            else:
-                for t in tareas_hoy:
-                    prioridad = t.get('prioridad', 'Normal')
-                    color = COLORES_PRIORIDAD.get(prioridad, "gray")
+            # Fecha de referencia para cálculos (usamos fecha seleccionada o 'hoy' real para urgencia?)
+            # El usuario navega con 'fecha_seleccionada', pero la urgencia ("quedan X días") 
+            # suele ser relativa a la FECHA ACTUAL REAL, no a la fecha que estás mirando en el calendario.
+            # Asumiremos HOY REAL para el cálculo de "quedan días" y urgencia.
+            hoy_real = date.today()
+
+            for t in tareas:
+                if t.get('estado') == 'Completada':
+                    continue
+                
+                # Calcular datos derivados
+                es_urgente_auto = False
+                dias_restantes_msg = ""
+                delta_dias = 999
+                
+                if t.get('fecha_fin'):
+                    try:
+                        d_fin = datetime.strptime(t['fecha_fin'], "%Y-%m-%d").date()
+                        delta_dias = (d_fin - hoy_real).days
+                        
+                        if delta_dias < 0:
+                            dias_restantes_msg = f"🔴 Venció hace {abs(delta_dias)} días"
+                        elif delta_dias == 0:
+                            dias_restantes_msg = "🟠 Vence HOY"
+                            es_urgente_auto = True # Vence hoy -> Urgente
+                        else:
+                            dias_restantes_msg = f"⏳ Quedan {delta_dias} días"
+                            if delta_dias < 2:
+                                es_urgente_auto = True
+                    except:
+                        pass
+                
+                # Determinar Prioridad Visual
+                prioridad_real = t.get('prioridad', 'Normal')
+                if es_urgente_auto:
+                    prioridad_visual = "Urgente" 
+                    nota_urgencia = "🔥 (Auto-Urgente)"
+                else:
+                    prioridad_visual = prioridad_real
+                    nota_urgencia = ""
+
+                # Objeto enriquecido para visualizar
+                t_visual = t.copy()
+                t_visual['prioridad_visual'] = prioridad_visual
+                t_visual['color'] = COLORES_PRIORIDAD.get(prioridad_visual, "gray")
+                t_visual['msg_tiempo'] = dias_restantes_msg
+                t_visual['nota_urgencia'] = nota_urgencia
+                
+                # Clasificar en listas (Según fecha objetivo original)
+                fecha_tarea = t.get('fecha') # Fecha inicio/objetivo
+                
+                # Grupo 1: Tareas programadas ESPECÍFICAMENTE para la fecha seleccionada
+                if fecha_tarea == str(fecha_seleccionada):
+                    tareas_hoy_list.append(t_visual)
+                # Grupo 2: Tareas que NO son de hoy, pero están vivas (tienen fecha fin futura o vigente)
+                # Solo las mostramos si estamos viendo HOY en el calendario, para no saturar días pasados/futuros
+                elif fecha_seleccionada == hoy_real and t.get('fecha_fin'):
+                     # Mostrar si la fecha fin es hoy o futuro (y no está ya en la lista de hoy)
+                     # Ojo: si fecha_tarea != hoy, pero fecha_fin >= hoy, es una tarea "en curso"
+                     d_fin_obj = datetime.strptime(t['fecha_fin'], "%Y-%m-%d").date()
+                     if d_fin_obj >= hoy_real:
+                         tareas_proximas_list.append(t_visual)
+
+            # --- RENDERIZADO ---
+            
+            def render_tarea(task):
+                color = task['color']
+                prio = task['prioridad_visual']
+                msg = task['msg_tiempo']
+                nota = task['nota_urgencia']
+                
+                with st.container(border=True):
+                    cols = st.columns([4, 1])
+                    # Título + Prioridad + Días Restantes
+                    header_html = f"**{task['titulo']}** <span style='color:{color}'>({prio})</span> {nota}"
+                    cols[0].markdown(header_html, unsafe_allow_html=True)
                     
-                    with st.container(border=True):
-                        cols = st.columns([4, 1])
-                        cols[0].markdown(f"**{t['titulo']}** <span style='color:{color}'>({prioridad})</span>", unsafe_allow_html=True)
-                        cols[0].write(f"🏷️ {t['tipo']}")
-                        if cols[1].button("✅", key=f"check_{t['id']}"):
-                            t['estado'] = 'Completada'
-                            if gestionar_tareas('actualizar', tarea_actualizada=t):
-                                st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "✅ Tarea marcada como completada y guardada en GitHub."}
-                            else:
-                                st.session_state["mensaje_global"] = {"tipo": "error", "texto": "❌ Error al actualizar en GitHub."}
-                            st.rerun()
+                    detalles = f"🏷️ {task['tipo']}"
+                    if msg:
+                        detalles += f" | **{msg}**"
+                        
+                    cols[0].write(detalles)
+                    
+                    if cols[1].button("✅", key=f"check_tab1_{task['id']}"): # Key único
+                        task['estado'] = 'Completada'
+                        if gestionar_tareas('actualizar', tarea_actualizada=task):
+                            st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "✅ Tarea completada."}
+                        else:
+                            st.session_state["mensaje_global"] = {"tipo": "error", "texto": "❌ Error al actualizar."}
+                        st.rerun()
+
+            if not tareas_hoy_list and not tareas_proximas_list:
+                st.info("✅ Nada pendiente para hoy.")
+
+            if tareas_hoy_list:
+                st.markdown("### 📅 Programadas para hoy")
+                for t in tareas_hoy_list:
+                    render_tarea(t)
+            
+            # Solo mostrar sección "En curso / Pendientes" si estamos viendo el día actual
+            if tareas_proximas_list and fecha_seleccionada == hoy_real:
+                st.markdown("### 🚑 Próximas Entregas / En Curso")
+                # Ordenar por urgencia (fecha fin más cercana)
+                tareas_proximas_list.sort(key=lambda x: x.get('fecha_fin') or "9999-12-31")
+                for t in tareas_proximas_list:
+                    render_tarea(t)
+
 
     # --- TAB 2: Añadir Tarea ---
     with tab2:
