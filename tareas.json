@@ -13,8 +13,12 @@
         "titulo": "Tarea prueba",
         "prioridad": "Importante",
         "tipo": "Entrega",
-        "estado": "Pendiente",
+        "estado": "Completada",
         "fecha": "2026-01-14",
-        "fecha_fin": "2026-01-17"
+        "fecha_fin": "2026-01-17",
+        "prioridad_visual": "Importante",
+        "color": "orange",
+        "msg_tiempo": "\u23f3 Quedan 3 d\u00edas",
+        "nota_urgencia": ""
     }
 ]
