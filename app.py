@@ -322,20 +322,23 @@ def render_tarjeta_gestion(t):
         c_main, c_actions = st.columns([5, 2]) # Ampliar columna acciones
         
         with c_main:
-            # Título grande
-            # Mostrar hora si existe
-            hora_str = ""
-            if not t.get('dia_completo', True) and t.get('hora'):
-                hora_str = f"🕒 {t['hora']} - "
-                
-            st.markdown(f"<h4 style='margin:0; opacity:{bg_opacity}'>{estado_icon} {hora_str}{t['titulo']}</h4>", unsafe_allow_html=True)
+            # Título grande (SIN HORA)
+            st.markdown(f"<h4 style='margin:0; opacity:{bg_opacity}'>{estado_icon} {t['titulo']}</h4>", unsafe_allow_html=True)
             
             # Determinamos qué fecha mostrar
             # Si tiene fecha_fin, es un Deadline. Si no, es fecha fija.
+            
+            # Construir string fecha/hora
+            str_fecha = ""
+            str_hora = ""
+            
+            if not t.get('dia_completo', True) and t.get('hora'):
+                str_hora = f" @ {t['hora']}"
+            
             if t.get('fecha_fin'):
-                 f_display = f"⏰ Deadline: {t['fecha_fin']}"
+                 f_display = f"⏰ Deadline: {t['fecha_fin']}{str_hora}"
             else:
-                 f_display = f"📅 {t['fecha']}"
+                 f_display = f"📅 {t['fecha']}{str_hora}"
             
             # Prioridad con color
             color_prio = "red" if t['prioridad'] == "Urgente" else "orange" if t['prioridad'] == "Importante" else "green"
@@ -476,14 +479,14 @@ def render_vista_diaria(tareas, fecha_seleccionada):
                 color = COLORES_TIPO.get(t['tipo'], "gray")
                 estilo_completada = "opacity: 0.5;" if t['estado'] == 'Completada' else ""
                 
-                # Texto Hora
-                hora_txt = ""
+                # Texto Hora (Badge separado)
+                hora_badge = ""
                 if not t.get('dia_completo', True) and t.get('hora'):
-                    hora_txt = f"**{t['hora']}** | "
+                    hora_badge = f"<span style='background-color:#444; color:white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-right: 5px'>🕒 {t['hora']}</span>"
                 
                 with st.container(border=True):
                         c1, c2 = st.columns([4, 1])
-                        c1.markdown(f"<div style='{estilo_completada}'>{hora_txt}<strong>{t['titulo']}</strong> <span style='background-color:{color}; padding: 2px 6px; border-radius: 4px; color: white; font-size: 0.8em'>{t['tipo']}</span></div>", unsafe_allow_html=True)
+                        c1.markdown(f"<div style='{estilo_completada}'>{hora_badge}<strong>{t['titulo']}</strong> <span style='background-color:{color}; padding: 2px 6px; border-radius: 4px; color: white; font-size: 0.8em'>{t['tipo']}</span></div>", unsafe_allow_html=True)
                         if t['estado'] != 'Completada':
                             if c2.button("✅", key=f"d_{t['id']}"):
                                 t['estado'] = 'Completada'
@@ -499,14 +502,15 @@ def render_vista_diaria(tareas, fecha_seleccionada):
                 urgency_icon = "🔥" if t['urgente'] else "⏰"
                 estilo_completada = "opacity: 0.5;" if t['estado'] == 'Completada' else ""
                 
-                # Texto Hora (para deadlines)
-                hora_txt = ""
+                # Texto Hora (Badge separado)
+                hora_badge = ""
                 if not t.get('dia_completo', True) and t.get('hora'):
-                    hora_txt = f" @ {t['hora']}"
+                    hora_badge = f"<span style='background-color:#444; color:white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 5px'>🕒 {t['hora']}</span>"
                 
                 with st.container(border=True):
                         c1, c2 = st.columns([4, 1])
-                        c1.markdown(f"<div style='{estilo_completada}'>{urgency_icon} <strong>{t['titulo']}</strong>{hora_txt} | {t['msg']}</div>", unsafe_allow_html=True) 
+                        # Deadlines: IconoTitulo (HoraBadge) | Msg
+                        c1.markdown(f"<div style='{estilo_completada}'>{urgency_icon} <strong>{t['titulo']}</strong> {hora_badge} | {t['msg']}</div>", unsafe_allow_html=True) 
                         c1.caption(f"Tipo: {t['tipo']}")
                         if t['estado'] != 'Completada':
                             if c2.button("✅", key=f"d_p_{t['id']}"):
@@ -562,18 +566,18 @@ def render_vista_semanal(tareas, fecha_base):
                 fecha_t = t.get('fecha')
                 fecha_f = t.get('fecha_fin')
                 
-                # Logica visual hora
-                hora_short = ""
+                # Logica visual hora (Bloque separado)
+                hora_html = ""
                 if not t.get('dia_completo', True) and t.get('hora'):
-                    hora_short = f"{t['hora']} "
+                     hora_html = f"<div style='font-size:0.8em; opacity:0.9; margin-bottom:2px; border-bottom:1px solid rgba(255,255,255,0.2)'>🕒 {t['hora']}</div>"
                 
                 if fecha_t == str(dia_actual) and not fecha_f:
                     color = COLORES_TIPO.get(t.get('tipo'), "gray")
-                    st.markdown(f"<div style='background-color: {color}; color: white; padding: 4px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>📅 {hora_short}{t['titulo']}</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='background-color: {color}; color: white; padding: 4px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>{hora_html}📅 <strong>{t['titulo']}</strong></div>", unsafe_allow_html=True)
                 
                 if fecha_f == str(dia_actual):
                     color = COLORES_TIPO.get(t.get('tipo'), "gray")
-                    st.markdown(f"<div style='border: 2px solid {color}; color: white; padding: 3px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>⏰ {hora_short}{t['titulo']}</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='border: 2px solid {color}; color: white; padding: 3px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>{hora_html}⏰ <strong>{t['titulo']}</strong></div>", unsafe_allow_html=True)
 
 # --- CONSTANTES DE FECHA (ESPAÑOL) ---
 NOMBRES_MESES = {
@@ -667,20 +671,20 @@ def render_vista_mensual(tareas, fecha_base):
                     
                     titulo_corto = (t['titulo'][:12] + '..') if len(t['titulo']) > 12 else t['titulo']
                     
-                    # Logica visual hora
-                    hora_short = ""
+                    # Logica visual hora (Mini bloque)
+                    hora_html = ""
                     if not t.get('dia_completo', True) and t.get('hora'):
-                        hora_short = f"{t['hora']} "
+                        hora_html = f"<span style='font-size:0.9em; opacity:0.8; margin-right:3px'>🕒{t['hora']}</span>"
                     
                     # Tarea de Día
                     if fecha_t == str(dia_actual) and not fecha_f:
                         color = COLORES_TIPO.get(t.get('tipo'), "gray")
-                        html_celda += f"<div style='background-color: {color}; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; font-size: 0.75em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{t['titulo']}'>📅 {hora_short}{titulo_corto}</div>"
+                        html_celda += f"<div style='background-color: {color}; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; font-size: 0.75em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{t['titulo']}'>{hora_html}📅 {titulo_corto}</div>"
                     
                     # Deadline
                     if fecha_f == str(dia_actual):
                         color = COLORES_TIPO.get(t.get('tipo'), "gray")
-                        html_celda += f"<div style='border: 1px solid {color}; color: white; padding: 1px 3px; border-radius: 3px; margin-bottom: 2px; font-size: 0.75em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{t['titulo']}'>⏰ {hora_short}{titulo_corto}</div>"
+                        html_celda += f"<div style='border: 1px solid {color}; color: white; padding: 1px 3px; border-radius: 3px; margin-bottom: 2px; font-size: 0.75em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='{t['titulo']}'>{hora_html}⏰ {titulo_corto}</div>"
                 
                 html_celda += "</div>"
                 
