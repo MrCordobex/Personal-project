@@ -7,5 +7,14 @@
         "estado": "Pendiente",
         "fecha": "2026-01-14",
         "fecha_fin": null
+    },
+    {
+        "id": 1768427384,
+        "titulo": "Tarea prueba",
+        "prioridad": "Importante",
+        "tipo": "Entrega",
+        "estado": "Pendiente",
+        "fecha": "2026-01-14",
+        "fecha_fin": "2026-01-17"
     }
 ]
