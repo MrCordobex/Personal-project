@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "id": 1768432505,
+        "titulo": "Gym",
+        "ubicacion": "Supera24h",
+        "tipo": "Rutina",
+        "es_rutina": true,
+        "dias_semana": [
+            0,
+            1,
+            2,
+            4
+        ],
+        "fecha": null,
+        "hora_inicio": "08:00",
+        "hora_fin": "09:30"
+    }
+]
