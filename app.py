@@ -58,6 +58,124 @@ COLORES_TIPO = {
     "Clase": "#2E8B57"       # Verde mar (para el horario)
 }
 
+# --- FUNCIONES DE SCRAPING (LOYOLA) ---
+
+def actualizar_horario_clases(force=False):
+    """
+    Scrapea la web de la universidad para los proximos 3 meses.
+    Se ejecuta solo si el archivo no existe o es antiguo (> 12h) o force=True.
+    Devuelve la lista de clases.
+    """
+    
+    # 1. Chequeo de Caché
+    if not force and os.path.exists(HORARIO_FILE):
+        try:
+            last_mod = datetime.fromtimestamp(os.path.getmtime(HORARIO_FILE))
+            if datetime.now() - last_mod < timedelta(hours=12):
+                # print("Usando caché local de horario.")
+                with open(HORARIO_FILE, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except: pass
+
+    # 2. Configurar Selenium
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    
+    data_clases = []
+    
+    try:
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+        
+        url = "https://portales.uloyola.es/LoyolaHorario/horario.xhtml?curso=2025%2F26&tipo=M&titu=2169&campus=2&ncurso=1&grupo=A"
+        driver.get(url)
+        
+        # Esperar carga inicial
+        wait = WebDriverWait(driver, 15)
+        # Buscar .fc-view-harness o .fc-event
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "fc-view-harness")))
+        
+        # Iterar 12 semanas (3 meses aprox)
+        weeks_to_scrape = 12
+        current_year = get_madrid_date().year
+        
+        for _ in range(weeks_to_scrape):
+            try:
+                # Recoger headers para saber fecha exacta de cada columna
+                headers = driver.find_elements(By.CLASS_NAME, "fc-col-header-cell")
+                week_dates = {} # index (0-6) -> date_str (YYYY-MM-DD)
+                
+                for idx, h in enumerate(headers):
+                    txt = h.text.lower() # "lun 13/1"
+                    if not txt: continue
+                    parts = txt.split(' ')
+                    if len(parts) > 1:
+                        day_month = parts[1].split('/') # ["13", "1"]
+                        d = int(day_month[0])
+                        m = int(day_month[1])
+                        
+                        y = current_year
+                        if m < datetime.now().month and datetime.now().month > 10:
+                            y += 1
+                        
+                        week_dates[idx] = f"{y}-{m:02d}-{d:02d}"
+
+                # Recoger Eventos
+                events = driver.find_elements(By.CLASS_NAME, "fc-event")
+                
+                for ev in events:
+                    try:
+                        style = ev.get_attribute("style")
+                        left_val = 0.0
+                        if "left:" in style:
+                            l_str = style.split("left:")[1].split("%")[0].strip()
+                            left_val = float(l_str)
+                        
+                        col_idx = int(round(left_val / 14.28)) # 0..6
+                        
+                        fecha_clase = week_dates.get(col_idx)
+                        if not fecha_clase: continue
+                        
+                        hora_text = ev.find_element(By.CLASS_NAME, "fc-event-time").text
+                        content_text = ev.find_element(By.CLASS_NAME, "fc-event-title").text
+                        
+                        parts = content_text.split("/")
+                        asig = parts[0].strip()
+                        aula = parts[1].replace("Aula:", "").strip() if len(parts) > 1 else ""
+                        
+                        data_clases.append({
+                            "asignatura": asig,
+                            "aula": aula,
+                            "fecha": fecha_clase,
+                            "hora": hora_text,
+                            "dia_completo": False
+                        })
+                        
+                    except: pass
+                
+                # Click Siguiente Semana
+                btn_next = driver.find_element(By.CLASS_NAME, "fc-next-button")
+                btn_next.click()
+                time_lib.sleep(1.0) 
+                
+            except Exception as e:
+                # print(f"Error scraping week: {e}")
+                break
+
+        driver.quit()
+        
+        # Guardar en JSON local
+        with open(HORARIO_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data_clases, f, indent=4, ensure_ascii=False)
+            
+        return data_clases
+
+    except Exception as e:
+        st.error(f"Error actualizando horario: {e}")
+        return []
+
 # --- GESTIÓN DE PERSISTENCIA (GITHUB) ---
 
 def obtener_conexion_repo():
