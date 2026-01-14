@@ -4,9 +4,13 @@
         "titulo": "Tarea prueba",
         "prioridad": "Normal",
         "tipo": "Examen",
-        "estado": "Pendiente",
+        "estado": "Completada",
         "fecha": "2026-01-14",
-        "fecha_fin": null
+        "fecha_fin": null,
+        "prioridad_visual": "Normal",
+        "color": "green",
+        "msg_tiempo": "",
+        "nota_urgencia": ""
     },
     {
         "id": 1768427384,
