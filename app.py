@@ -4,6 +4,7 @@ import json
 import pandas as pd
 from datetime import datetime, date, timedelta
 import calendar
+import pytz
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
@@ -11,6 +12,17 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# --- CONFIGURACIÓN DE ZONA HORARIA ---
+TZ_MADRID = pytz.timezone('Europe/Madrid')
+
+def get_madrid_time():
+    """Devuelve la fecha y hora actual en Madrid"""
+    return datetime.now(TZ_MADRID)
+
+def get_madrid_date():
+    """Devuelve la fecha actual en Madrid"""
+    return get_madrid_time().date()
 
 # --- CONFIGURACIÓN DE USUARIO (CAMBIAR ESTO) ---
 # Nombre del repositorio donde se guardará el archivo tareas.json
@@ -241,57 +253,104 @@ def render_vista_gestionar_todas(tareas):
         st.info("No hay tareas registradas. ¡Añade una nueva!")
         return
 
-    # Filtros simples (opcional para el futuro, por ahora listado limpio)
-    
-    # Grid de tareas
-    for t in tareas:
-        # Icono y Color
-        estado_icon = "✅" if t['estado'] == 'Completada' else "⬜"
-        color_borde = COLORES_PRIORIDAD.get(t.get('prioridad', 'Normal'), "gray")
-        bg_opacity = "0.5" if t['estado'] == 'Completada' else "1"
-        
-        with st.container(border=True):
-            c_main, c_actions = st.columns([5, 1])
-            
-            with c_main:
-                # Título grande
-                st.markdown(f"<h4 style='margin:0; opacity:{bg_opacity}'>{estado_icon} {t['titulo']}</h4>", unsafe_allow_html=True)
-                
-                # Metadatos en linea
-                f_texto = f"📅 {t['fecha']}" if t.get('fecha') else f"⏰ Deadline: {t['fecha_fin']}"
-                st.caption(f"{t['tipo']} | {t['prioridad']} | {f_texto}")
-                
-            with c_actions:
-                # Botón expander para editar
-                with st.popover("✏️ Editar"):
-                    with st.form(f"edit_main_{t['id']}"):
-                        e_titulo = st.text_input("Título", t['titulo'])
-                        
-                        es_deadline = t.get('fecha_fin') is not None
-                        if es_deadline:
-                            fecha_act = datetime.strptime(t['fecha_fin'], "%Y-%m-%d").date()
-                            e_fecha = st.date_input("Deadline", fecha_act)
-                        else:
-                            fecha_act = datetime.strptime(t['fecha'], "%Y-%m-%d").date()
-                            e_fecha = st.date_input("Fecha", fecha_act)
+    # 1. SEPARAR PENDIENTES Y COMPLETADAS
+    pendientes = [t for t in tareas if t['estado'] != 'Completada']
+    completadas = [t for t in tareas if t['estado'] == 'Completada']
 
-                        e_estado = st.selectbox("Estado", ["Pendiente", "Completada"], index=0 if t['estado']=="Pendiente" else 1)
-                        e_prioridad = st.selectbox("Prioridad", ["Normal", "Importante", "Urgente"], index=["Normal", "Importante", "Urgente"].index(t.get('prioridad', 'Normal')))
+    # 2. ORDENAR PENDIENTES
+    # Prioridad: Urgente (3) > Importante (2) > Normal (1)
+    # Fecha: Ascendente (Más cercana primero)
+    mapa_prioridad = {"Urgente": 3, "Importante": 2, "Normal": 1}
+    
+    def key_orden(t):
+        prio_val = mapa_prioridad.get(t.get('prioridad', 'Normal'), 1)
+        # Fecha para ordenar: Usar fecha_fin si existe (deadline), sino fecha
+        fecha_str = t.get('fecha_fin') if t.get('fecha_fin') else t.get('fecha')
+        return (-prio_val, fecha_str) # Menos prioridad primero (desc), fecha asc
+
+    pendientes.sort(key=key_orden)
+    
+    # 3. RENDERIZAR
+    
+    # --- SECCIÓN PENDIENTES ---
+    st.markdown("### 📝 Por Hacer")
+    if not pendientes:
+        st.caption("¡Todo al día! No tienes tareas pendientes.")
+    
+    for t in pendientes:
+        render_tarjeta_gestion(t)
+        
+    st.divider()
+    
+    # --- SECCIÓN COMPLETADAS ---
+    st.markdown("### ✅ Realizadas")
+    if not completadas:
+        st.caption("Aún no has completado ninguna tarea.")
+        
+    for t in completadas:
+        render_tarjeta_gestion(t)
+
+def render_tarjeta_gestion(t):
+    """Auxiliar para pintar la tarjeta de una tarea en la lista de gestión"""
+    # Icono y Color
+    estado_icon = "✅" if t['estado'] == 'Completada' else "⬜"
+    color_borde = COLORES_PRIORIDAD.get(t.get('prioridad', 'Normal'), "gray")
+    bg_opacity = "0.5" if t['estado'] == 'Completada' else "1"
+    
+    with st.container(border=True):
+        c_main, c_actions = st.columns([5, 1])
+        
+        with c_main:
+            # Título grande
+            st.markdown(f"<h4 style='margin:0; opacity:{bg_opacity}'>{estado_icon} {t['titulo']}</h4>", unsafe_allow_html=True)
+            
+            # Determinamos qué fecha mostrar
+            # Si tiene fecha_fin, es un Deadline. Si no, es fecha fija.
+            if t.get('fecha_fin'):
+                 f_display = f"⏰ Deadline: {t['fecha_fin']}"
+            else:
+                 f_display = f"📅 {t['fecha']}"
+            
+            # Prioridad con color
+            color_prio = "red" if t['prioridad'] == "Urgente" else "orange" if t['prioridad'] == "Importante" else "green"
+            
+            st.markdown(f"<span style='color:{color_prio}; font-weight:bold'>{t['prioridad']}</span> | {t['tipo']} | **{f_display}**", unsafe_allow_html=True)
+            
+        with c_actions:
+            # Botón expander para editar
+            with st.popover("✏️ Editar"):
+                with st.form(f"edit_main_{t['id']}"):
+                    e_titulo = st.text_input("Título", t['titulo'])
+                    
+                    es_deadline = t.get('fecha_fin') is not None
+                    if es_deadline:
+                        try:
+                            fecha_base = datetime.strptime(t['fecha_fin'], "%Y-%m-%d").date()
+                        except: fecha_base = date.today()
+                        e_fecha = st.date_input("Deadline", fecha_base)
+                    else:
+                        try:
+                            fecha_base = datetime.strptime(t['fecha'], "%Y-%m-%d").date()
+                        except: fecha_base = date.today()
+                        e_fecha = st.date_input("Fecha", fecha_base)
+
+                    e_estado = st.selectbox("Estado", ["Pendiente", "Completada"], index=0 if t['estado']=="Pendiente" else 1)
+                    e_prioridad = st.selectbox("Prioridad", ["Normal", "Importante", "Urgente"], index=["Normal", "Importante", "Urgente"].index(t.get('prioridad', 'Normal')))
+                    
+                    if st.form_submit_button("Guardar Cambios"):
+                        t['titulo'] = e_titulo
+                        t['estado'] = e_estado
+                        t['prioridad'] = e_prioridad
+                        if es_deadline: t['fecha_fin'] = str(e_fecha)
+                        else: t['fecha'] = str(e_fecha)
+                        gestionar_tareas('actualizar', tarea_actualizada=t)
+                        st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "✏️ Tarea actualizada"}
+                        st.rerun()
                         
-                        if st.form_submit_button("Guardar Cambios"):
-                            t['titulo'] = e_titulo
-                            t['estado'] = e_estado
-                            t['prioridad'] = e_prioridad
-                            if es_deadline: t['fecha_fin'] = str(e_fecha)
-                            else: t['fecha'] = str(e_fecha)
-                            gestionar_tareas('actualizar', tarea_actualizada=t)
-                            st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "✏️ Tarea actualizada"}
-                            st.rerun()
-                            
-                if st.button("🗑️", key=f"del_main_{t['id']}", help="Borrar tarea"):
-                    gestionar_tareas('borrar', id_tarea_eliminar=t['id'])
-                    st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "🗑️ Tarea eliminada"}
-                    st.rerun()
+            if st.button("🗑️", key=f"del_main_{t['id']}", help="Borrar tarea"):
+                gestionar_tareas('borrar', id_tarea_eliminar=t['id'])
+                st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "🗑️ Tarea eliminada"}
+                st.rerun()
 
 
 def render_vista_diaria(tareas, fecha_seleccionada):
@@ -392,10 +451,28 @@ def render_vista_semanal(tareas, fecha_base):
     for i, col in enumerate(cols):
         dia_actual = start_of_week + timedelta(days=i)
         is_today = dia_actual == date.today()
-        header_style = "border-bottom: 3px solid red;" if is_today else "border-bottom: 1px solid #444;"
+        is_selected = dia_actual == fecha_base
         
+        # Estilo Header
+        if is_selected:
+            header_bg = "#1E90FF" # Azul fuerte para seleccionado
+            header_border = "3px solid #1E90FF"
+        elif is_today:
+            header_bg = "#FF4B4B" # Rojo para hoy
+            header_border = "3px solid #FF4B4B"
+        else:
+            header_bg = "transparent"
+            header_border = "1px solid #444"
+            
         with col:
-            st.markdown(f"<div style='text-align: center; {header_style} margin-bottom:5px;'><strong>{dias_semana[i]}</strong><br><span style='font-size:1.2em'>{dia_actual.day}</span></div>", unsafe_allow_html=True)
+            # Header con estilo dinámico
+            st.markdown(f"""
+            <div style='text-align: center; border-bottom: {header_border}; margin-bottom:5px;'>
+                <div style='background-color: {header_bg}; color: white; border-radius: 4px 4px 0 0; padding: 2px;'>
+                    <strong>{dias_semana[i]}</strong>
+                </div>
+                <div style='font-size:1.2em; padding: 5px;'>{dia_actual.day}</div>
+            </div>""", unsafe_allow_html=True)
             
             # 1. Horario
             clases = HORARIO_FIJO.get(i, [])
@@ -448,11 +525,21 @@ def render_vista_mensual(tareas, fecha_base):
                 
                 dia_actual = date(fecha_base.year, fecha_base.month, day_num)
                 is_today = dia_actual == date.today()
+                is_selected = dia_actual == fecha_base
                 
                 # Definir colores y bordes
                 bg_color = "transparent"
-                border_color = "#ff4b4b" if is_today else "#333" 
-                border_width = "2px" if is_today else "1px"
+                
+                # Prioridad estilo: Seleccionado > Hoy > Normal
+                if is_selected:
+                    border_color = "#1E90FF" # Azul seleccion
+                    border_width = "3px"
+                elif is_today:
+                    border_color = "#ff4b4b" # Rojo hoy
+                    border_width = "2px"
+                else:
+                    border_color = "#333"
+                    border_width = "1px"
                 
                 # --- CONSTRUCCIÓN DEL HTML DE LA CELDA ---
                 html_celda = f"""
@@ -469,7 +556,10 @@ def render_vista_mensual(tareas, fecha_base):
                 """
                 
                 # 1. HEADER (Número)
-                color_num = "#ff4b4b" if is_today else "#ccc"
+                if is_selected: color_num = "#1E90FF"
+                elif is_today: color_num = "#ff4b4b"
+                else: color_num = "#ccc"
+                
                 html_celda += f"""
                 <div style='
                     text-align: right; 
