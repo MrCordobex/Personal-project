@@ -7,7 +7,9 @@
         "estado": "Pendiente",
         "fecha": "2026-01-16",
         "fecha_fin": null,
-        "dia_completo": false,
-        "hora": "20:00"
+        "dia_completo": true,
+        "hora": null,
+        "msg": "",
+        "urgente": false
     }
 ]
