@@ -139,6 +139,51 @@ def gestionar_tareas(accion, nueva_tarea=None, id_tarea_eliminar=None, tarea_act
         st.error(f"Error operando en GitHub ({accion}): {e}")
         return False
 
+def gestionar_horario(accion, nuevo_item=None, id_eliminar=None, item_actualizado=None):
+    """
+    Gestiona el archivo horario.json en GitHub.
+    """
+    token = st.secrets["GITHUB_TOKEN"]
+    g = Github(token)
+    repo = g.get_repo(REPO_NAME)
+    file_path = "horario.json"
+    
+    try:
+        contents = repo.get_contents(file_path)
+        data = json.loads(contents.decoded_content.decode())
+    except:
+        data = [] 
+
+    if accion == 'leer':
+        return data
+
+    elif accion == 'crear':
+        data.append(nuevo_item)
+        mensaje = "Nuevo horario/evento añadido"
+
+    elif accion == 'borrar':
+        data = [t for t in data if t['id'] != id_eliminar]
+        mensaje = "Elemento eliminado"
+
+    elif accion == 'actualizar':
+        for index, item in enumerate(data):
+            if item['id'] == item_actualizado['id']:
+                data[index] = item_actualizado
+                break
+        mensaje = "Horario actualizado"
+    
+    # GUARDAR
+    try:
+        updated_content = json.dumps(data, indent=4)
+        if 'contents' in locals():
+             repo.update_file(contents.path, mensaje, updated_content, contents.sha)
+        else:
+             repo.create_file(file_path, "Init horario", updated_content)
+        return True
+    except Exception as e:
+        st.error(f"Error guardando horario: {e}")
+        return False
+
 # --- UI Y LÓGICA ---
 
 def main():
