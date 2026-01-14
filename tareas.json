@@ -1,15 +1,1 @@
-[
-    {
-        "id": 1768427974,
-        "titulo": "Tarea prueba",
-        "prioridad": "Normal",
-        "tipo": "Estudio",
-        "estado": "Completada",
-        "fecha": "2026-01-14",
-        "fecha_fin": "2026-01-15",
-        "prioridad_visual": "Urgente",
-        "color": "red",
-        "msg_tiempo": "\u23f3 Quedan 1 d\u00edas",
-        "nota_urgencia": "\ud83d\udd25 (Auto-Urgente)"
-    }
-]
+[]
