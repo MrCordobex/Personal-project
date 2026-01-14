@@ -83,22 +83,47 @@ def actualizar_horario_clases(force=False):
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
+    options.add_argument('--window-size=1920,1080')
     
     data_clases = []
     
     try:
-        # Intentar conectar con Chromium instalado (Streamlit Cloud)
-        try:
-            # Opción A: Usar driver del sistema (packages.txt installa chromium-driver en /usr/bin/chromedriver)
-            service = Service("/usr/bin/chromedriver")
-            options.binary_location = "/usr/bin/chromium" 
-            driver = webdriver.Chrome(service=service, options=options)
-        except:
-            # Opción B: Fallback a local (Windows/Mac) con webdriver-manager
-            # Reset options binary if failed
-            options.binary_location = "" 
-            service = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=service, options=options)
+        service = None
+        # Detección de entorno (Linux/Cloud vs Local)
+        # Rutas comunes de chromedriver en Linux (Debian/Ubuntu)
+        possible_paths = [
+            "/usr/bin/chromedriver",
+            "/usr/lib/chromium-browser/chromedriver",
+            "/usr/bin/chromium-browser"
+        ]
+        
+        system_driver_path = None
+        for p in possible_paths:
+            if os.path.exists(p) and "driver" in p:
+                system_driver_path = p
+                break
+        
+        if system_driver_path:
+            # Estamos en Linux/Cloud con paquetes instalados
+            service = Service(system_driver_path)
+            # Buscar binario del navegador
+            if os.path.exists("/usr/bin/chromium"):
+                options.binary_location = "/usr/bin/chromium"
+            elif os.path.exists("/usr/bin/chromium-browser"):
+                options.binary_location = "/usr/bin/chromium-browser"
+        else:
+            # Estamos en Windows o Local sin drivers globales -> Usar Manager
+            try:
+                service = Service(ChromeDriverManager().install())
+            except:
+                # Fallback final si falla la descarga
+                pass
+
+        if not service:
+            st.error("No se pudo iniciar el driver de Chrome.")
+            return []
+            
+        driver = webdriver.Chrome(service=service, options=options)
         
         url = "https://portales.uloyola.es/LoyolaHorario/horario.xhtml?curso=2025%2F26&tipo=M&titu=2169&campus=2&ncurso=1&grupo=A"
         driver.get(url)
