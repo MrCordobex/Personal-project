@@ -1,1 +1,11 @@
-[]
+[
+    {
+        "id": 1768427974,
+        "titulo": "Tarea prueba",
+        "prioridad": "Normal",
+        "tipo": "Estudio",
+        "estado": "Pendiente",
+        "fecha": "2026-01-14",
+        "fecha_fin": "2026-01-15"
+    }
+]
