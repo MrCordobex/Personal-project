@@ -1,1 +1,11 @@
-[]
+[
+    {
+        "id": 1768427079,
+        "titulo": "Prueba futura",
+        "fecha": "2026-01-14",
+        "fecha_fin": "2026-01-18",
+        "prioridad": "Normal",
+        "tipo": "Estudio",
+        "estado": "Pendiente"
+    }
+]
