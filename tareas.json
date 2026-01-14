@@ -9,15 +9,6 @@
         "fecha_fin": null
     },
     {
-        "id": 1768429250,
-        "titulo": "Prueba futura",
-        "prioridad": "Urgente",
-        "tipo": "Entrega",
-        "estado": "Pendiente",
-        "fecha": "2026-01-14",
-        "fecha_fin": "2026-01-23"
-    },
-    {
         "id": 1768430129,
         "titulo": "Tarea 2",
         "prioridad": "Urgente",
