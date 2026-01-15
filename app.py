@@ -752,7 +752,15 @@ def mostrar_detalle_item(item):
     
     # Información General
     c1, c2 = st.columns(2)
-    c1.markdown(f"**🕒 Hora:** {item.get('hora', 'Todo el día')}")
+    
+    # Lógica para determinar la hora
+    hora_str = item.get('hora')
+    if not hora_str and item.get('hora_inicio') and item.get('hora_fin'):
+         hora_str = f"{item['hora_inicio']} - {item['hora_fin']}"
+    if not hora_str:
+         hora_str = 'Todo el día'
+         
+    c1.markdown(f"**🕒 Hora:** {hora_str}")
     if item.get('ubicacion'): c1.markdown(f"**📍 Ubicación:** {item['ubicacion']}")
     # Aula para clases
     if item.get('aula'): c1.markdown(f"**📍 Aula:** {item['aula']}")
