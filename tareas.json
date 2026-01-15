@@ -81,11 +81,13 @@
         "titulo": "Preguntar Diego Congreso",
         "prioridad": "Urgente",
         "tipo": "Otro",
-        "estado": "Pendiente",
+        "estado": "Completada",
         "fecha": "2026-01-15",
         "fecha_fin": null,
         "dia_completo": true,
-        "hora": null
+        "hora": null,
+        "msg": "",
+        "urgente": false
     },
     {
         "id": 1768476616,
