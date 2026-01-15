@@ -1130,7 +1130,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
     """, unsafe_allow_html=True)
 
     st.subheader(f"Vista Semanal")
-    
+    #.
     start_of_week = fecha_base - timedelta(days=fecha_base.weekday())
     
     cols = st.columns(7)
