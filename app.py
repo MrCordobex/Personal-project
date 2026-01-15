@@ -1047,28 +1047,27 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 }
             }
 
-            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - CSS GRID SCOPED (FINAL) */
+            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - CSS GRID REVOLUTION */
             @media (orientation: portrait) and (max-width: 600px) {
-                 /* APUNTAR SOLO AL CALENDARIO (7 COLUMNAS) */
-                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) {
+                 div[data-testid="stHorizontalBlock"] {
                     display: grid !important;
                     grid-template-columns: repeat(7, 1fr) !important;
-                    gap: 1px !important;
+                    gap: 1px !important; /* Minima separacion */
                     width: 100% !important;
+                    min-width: 0 !important;
                  }
                  
-                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) > div[data-testid="column"] {
+                 div[data-testid="column"] {
                     width: auto !important;
                     min-width: 0 !important;
+                    max-width: none !important;
                     padding: 0 !important;
                     margin: 0 !important;
-                    flex: none !important;
+                    flex: none !important; /* Desactivar flex en hijos */
                  }
                  
-                 /* Limpiamos margenes texto SOLO EN CALENDARIO */
-                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] p,
-                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] div, 
-                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] strong {
+                 /* Limpiamos margenes texto */
+                 div[data-testid="column"] p, div[data-testid="column"] div, div[data-testid="column"] strong {
                     font-size: 3.5vw !important; 
                     line-height: normal !important;
                     margin: 0 !important;
@@ -1076,7 +1075,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     text-align: center !important; 
                 }
                 
-                /* Headers Custom */
+                /* CLASE PERSONALIZADA para el Header (inyectada en el HTML abajo) */
                 .mobile-header-text {
                     font-size: 3vw !important;
                     padding: 0 !important;
@@ -1090,8 +1089,8 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                      line-height: normal !important;
                 }
 
-                /* Botones: ICON ONLY MODE (SOLO EN CALENDARIO) */
-                div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button {
+                /* Botones: ICON ONLY MODE */
+                div[data-testid="stButton"] button {
                     font-size: 4vw !important;
                     padding: 0px !important;
                     min-height: 25px !important;
@@ -1101,7 +1100,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     background-color: transparent !important;
                     margin: 0 !important;
                 }
-                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button p {
+                 div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
                     width: 100% !important;
@@ -1116,19 +1115,20 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) */
                 div[data-testid="stDialog"] div[data-testid="stHorizontalBlock"] {
                     display: flex !important;
-                    flex-direction: row !important;
-                    gap: 10px !important;
-                    width: 100% !important;
+                    gap: 10px !important; 
                     grid-template-columns: none !important;
                 }
-                
-                div[data-testid="stDialog"] div[data-testid="column"] {
-                    flex: 1 !important; 
+                /* Columna 1 (Icono): Pequeña */
+                div[data-testid="stDialog"] div[data-testid="column"]:nth-child(1) {
+                    flex: 1 !important;
                     width: auto !important;
                     min-width: 0 !important;
-                    max-width: none !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
+                }
+                /* Columna 2 (Titulo): Grande */
+                 div[data-testid="stDialog"] div[data-testid="column"]:nth-child(2) {
+                    flex: 5 !important;
+                    width: auto !important;
+                    min-width: 0 !important;
                 }
             }
         }
