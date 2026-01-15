@@ -97,16 +97,5 @@
         "fecha_fin": "2026-01-25",
         "dia_completo": true,
         "hora": null
-    },
-    {
-        "id": 1768481482,
-        "titulo": "Prueba",
-        "prioridad": "Normal",
-        "tipo": "Examen",
-        "estado": "Pendiente",
-        "fecha": "2026-01-14",
-        "fecha_fin": null,
-        "dia_completo": true,
-        "hora": null
     }
 ]
