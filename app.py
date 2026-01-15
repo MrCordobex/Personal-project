@@ -60,24 +60,8 @@ COLORES_TIPO = {
 
 # --- FUNCIONES DE SCRAPING (LOYOLA) ---
 
-def actualizar_horario_clases(force=False):
-    """
-    Scrapea la web de la universidad para los proximos 3 meses.
-    Se ejecuta solo si el archivo no existe o es antiguo (> 12h) o force=True.
-    Devuelve la lista de clases.
-    """
-    
-    # 1. Chequeo de Caché
-    if not force and os.path.exists(HORARIO_FILE):
-        try:
-            last_mod = datetime.fromtimestamp(os.path.getmtime(HORARIO_FILE))
-            if datetime.now() - last_mod < timedelta(hours=12):
-                # print("Usando caché local de horario.")
-                with open(HORARIO_FILE, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-        except: pass
-
-    # 2. Configurar Selenium
+def init_driver():
+    """Inicializa y devuelve una instancia de Chrome Driver"""
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
@@ -85,52 +69,68 @@ def actualizar_horario_clases(force=False):
     options.add_argument('--disable-gpu')
     options.add_argument('--window-size=1920,1080')
     
+    service = None
+    # Detección de entorno (Linux/Cloud vs Local)
+    possible_paths = [
+        "/usr/bin/chromedriver",
+        "/usr/lib/chromium-browser/chromedriver",
+        "/usr/bin/chromium-browser"
+    ]
+    
+    system_driver_path = None
+    for p in possible_paths:
+        if os.path.exists(p) and "driver" in p:
+            system_driver_path = p
+            break
+    
+    if system_driver_path:
+        service = Service(system_driver_path)
+        if os.path.exists("/usr/bin/chromium"):
+            options.binary_location = "/usr/bin/chromium"
+        elif os.path.exists("/usr/bin/chromium-browser"):
+            options.binary_location = "/usr/bin/chromium-browser"
+    else:
+        try:
+            service = Service(ChromeDriverManager().install())
+        except: pass
+
+    if not service:
+        return None
+        
+    return webdriver.Chrome(service=service, options=options)
+
+def actualizar_horario_clases(force=False, driver=None):
+    """
+    Scrapea la web de la universidad.
+    Acepta driver opcional para reutilizar sesión.
+    """
+    # 1. Chequeo de Caché
+    if not force and os.path.exists(HORARIO_FILE):
+        try:
+            last_mod = datetime.fromtimestamp(os.path.getmtime(HORARIO_FILE))
+            if datetime.now() - last_mod < timedelta(hours=12):
+                with open(HORARIO_FILE, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except: pass
+
+    # 2. Configurar Selenium
+    driver_propio = False
+    if not driver:
+        driver = init_driver()
+        driver_propio = True
+        
+    if not driver:
+        st.error("No se pudo iniciar el driver de Chrome.")
+        return []
+    
     data_clases = []
     
     try:
-        service = None
-        # Detección de entorno (Linux/Cloud vs Local)
-        # Rutas comunes de chromedriver en Linux (Debian/Ubuntu)
-        possible_paths = [
-            "/usr/bin/chromedriver",
-            "/usr/lib/chromium-browser/chromedriver",
-            "/usr/bin/chromium-browser"
-        ]
-        
-        system_driver_path = None
-        for p in possible_paths:
-            if os.path.exists(p) and "driver" in p:
-                system_driver_path = p
-                break
-        
-        if system_driver_path:
-            # Estamos en Linux/Cloud con paquetes instalados
-            service = Service(system_driver_path)
-            # Buscar binario del navegador
-            if os.path.exists("/usr/bin/chromium"):
-                options.binary_location = "/usr/bin/chromium"
-            elif os.path.exists("/usr/bin/chromium-browser"):
-                options.binary_location = "/usr/bin/chromium-browser"
-        else:
-            # Estamos en Windows o Local sin drivers globales -> Usar Manager
-            try:
-                service = Service(ChromeDriverManager().install())
-            except:
-                # Fallback final si falla la descarga
-                pass
-
-        if not service:
-            st.error("No se pudo iniciar el driver de Chrome.")
-            return []
-            
-        driver = webdriver.Chrome(service=service, options=options)
-        
         url = "https://portales.uloyola.es/LoyolaHorario/horario.xhtml?curso=2025%2F26&tipo=M&titu=2169&campus=2&ncurso=1&grupo=A"
         driver.get(url)
         
         # Esperar carga inicial
         wait = WebDriverWait(driver, 15)
-        # Buscar .fc-view-harness o .fc-event
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "fc-view-harness")))
         
         # Iterar 12 semanas (3 meses aprox)
@@ -139,41 +139,34 @@ def actualizar_horario_clases(force=False):
         
         for _ in range(weeks_to_scrape):
             try:
-                # --- ESPERAR A QUE CARGUEN LOS EVENTOS ---
                 try:
                     WebDriverWait(driver, 5).until(
                         EC.presence_of_element_located((By.CLASS_NAME, "fc-event"))
                     )
-                except:
-                    pass
+                except: pass
                 
                 time_lib.sleep(1.5)
 
-                # 1. MAPEAR COLUMNAS (DÍAS) usando coordenadas X
-                # Los headers tienen el atributo 'data-date' (YYYY-MM-DD)
                 headers = driver.find_elements(By.CLASS_NAME, "fc-col-header-cell")
-                column_map = [] # list of {date: str, x_start: float, x_end: float}
+                column_map = []
                 
                 for h in headers:
-                    d_date = h.get_attribute("data-date") # "2026-01-12"
+                    d_date = h.get_attribute("data-date")
                     if d_date:
-                        rect = h.rect # {'x': 100, 'y': 50, 'width': 200, ...}
+                        rect = h.rect
                         column_map.append({
                             "date": d_date,
                             "x_start": rect['x'],
                             "x_end": rect['x'] + rect['width']
                         })
                 
-                # 2. RECOGER EVENTOS y asignarlos por coordenada X
                 events = driver.find_elements(By.CLASS_NAME, "fc-event")
                 
                 for ev in events:
                     try:
-                        # Coordenada X del evento
                         ev_rect = ev.rect
                         ev_center_x = ev_rect['x'] + (ev_rect['width'] / 2)
                         
-                        # Buscar a qué columna pertenece
                         fecha_clase = None
                         for col in column_map:
                             if col['x_start'] <= ev_center_x <= col['x_end']:
@@ -182,15 +175,11 @@ def actualizar_horario_clases(force=False):
                         
                         if not fecha_clase: continue
                         
-                        # Extraer texto
-                        # A veces el texto está directo o en hijos
                         full_text = ev.text 
-                        # Intentar parsing más específico si existen los elementos internos
                         try:
                             hora_text = ev.find_element(By.CLASS_NAME, "fc-event-time").text
                             content_text = ev.find_element(By.CLASS_NAME, "fc-event-title").text
                         except:
-                            # Fallback si no encuentra hijos (estructura diferente)
                             lines = full_text.split('\n')
                             hora_text = lines[0] if lines else ""
                             content_text = lines[1] if len(lines) > 1 else ""
@@ -199,11 +188,7 @@ def actualizar_horario_clases(force=False):
                         asig = parts[0].strip()
                         aula = parts[1].replace("Aula:", "").strip() if len(parts) > 1 else "Desconocido"
                         
-                        # CORRECCIÓN UTC AHORA (+1 hora manual)
-                        # El texto suele ser "15:00 - 17:00" y la web lo sirve asi en headless.
-                        # Vamos a sumar 1 hora a ambas partes.
                         try:
-                            # hora_text = "15:00 - 19:00"
                             h_parts = hora_text.split("-")
                             new_times = []
                             for hp in h_parts:
@@ -212,36 +197,29 @@ def actualizar_horario_clases(force=False):
                                 new_times.append(t_new.strftime("%H:%M"))
                             
                             hora_text = f"{new_times[0]} - {new_times[1]}"
-                        except:
-                            # Si falla el parseo (texto raro), lo dejamos tal cual
-                            pass
+                        except: pass
 
                         data_clases.append({
                             "asignatura": asig,
-                            "titulo": asig, # Para consistencia con el resto de la app
+                            "titulo": asig,
                             "aula": aula,
                             "fecha": fecha_clase,
                             "hora": hora_text,
                             "dia_completo": False
                         })
                         
-                    except Exception as e_ev: 
-                        # print(f"Error parsing event: {e_ev}")
-                        pass
+                    except Exception as e_ev: pass
                 
-                # Click Siguiente Semana
                 try:
                     btn_next = driver.find_element(By.CLASS_NAME, "fc-next-button")
                     btn_next.click()
                     time_lib.sleep(1.0) 
-                except:
-                   break 
+                except: break 
                    
-            except Exception as e:
-                # print(f"Error scraping week: {e}")
-                break
+            except Exception as e: break
 
-        driver.quit()
+        if driver_propio:
+            driver.quit()
         
         # Guardar en JSON local
         with open(HORARIO_FILE, 'w', encoding='utf-8') as f:
@@ -251,6 +229,111 @@ def actualizar_horario_clases(force=False):
 
     except Exception as e:
         st.error(f"Error actualizando horario: {e}")
+        if driver_propio: driver.quit()
+        return []
+
+def actualizar_horario_sevilla(driver=None):
+    """Scrapea partidos del Sevilla FC"""
+    driver_propio = False
+    if not driver:
+        driver = init_driver()
+        driver_propio = True
+        
+    if not driver: return []
+    
+    data_futbol = []
+    try:
+        url = "https://www.laliga.com/clubes/sevilla-fc/proximos-partidos"
+        driver.get(url)
+        wait = WebDriverWait(driver, 10)
+        
+        # Cookies
+        try:
+            # Buscar texto 'Aceptar' o similar en botones
+            btns = driver.find_elements(By.TAG_NAME, "button")
+            for b in btns:
+                if "Aceptar" in b.text:
+                    b.click()
+                    break
+            time_lib.sleep(1)
+        except: pass
+        
+        # Matches logic based on inspection
+        # Selector for rows: tr.styled__TableRow-sc-43wy8s-4:not(.row-more-info)
+        # Using a broader aproach with classes
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, "tr")))
+        filas = driver.find_elements(By.CSS_SELECTOR, "tr.styled__TableRow-sc-43wy8s-4")
+        
+        for fila in filas:
+            if "row-more-info" in fila.get_attribute("class"): continue
+            
+            try:
+                # Fecha
+                fecha_el = fila.find_element(By.CSS_SELECTOR, "td[type='date'] p")
+                fecha_txt = fecha_el.text # "18 ENE. 25" format usually
+                
+                # Parsear fecha "18 ENE. 25" -> YYYY-MM-DD
+                # Diccionario meses
+                meses_es = {"ENE": 1, "FEB": 2, "MAR": 3, "ABR": 4, "MAY": 5, "JUN": 6, "JUL": 7, "AGO": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DIC": 12}
+                parts = fecha_txt.replace(".", "").split(" ")
+                if len(parts) >= 3:
+                    dia = int(parts[0])
+                    mes = meses_es.get(parts[1].upper(), 1)
+                    anio = 2000 + int(parts[2])
+                    fecha_obj = date(anio, mes, dia)
+                    fecha_iso = fecha_obj.strftime("%Y-%m-%d")
+                else: continue
+                
+                # Hora
+                hora_el = fila.find_element(By.CSS_SELECTOR, "td[type='time'] p")
+                hora_txt = hora_el.text # "21:00" or "-- : --"
+                
+                es_dia_completo = False
+                if "--" in hora_txt:
+                    es_dia_completo = True
+                    hora_txt = None
+                
+                # Equipos
+                # Home: div.styled__ShieldStyled-sc-2hkd8m-2:nth-child(1) p
+                # Away: div.styled__ShieldStyled-sc-2hkd8m-2:nth-child(3) p
+                equipos = fila.find_elements(By.CSS_SELECTOR, "div.styled__ShieldStyled-sc-2hkd8m-2 p")
+                local_name = equipos[0].text if len(equipos) > 0 else "Unknown"
+                visitante_name = equipos[1].text if len(equipos) > 1 else "Unknown" # index 1 bc scraping gets p texts, might need nth-child checks if reliable
+                
+                # Si falla lo anterior, probar logica de hijos directos del contenedor de equipos
+                # Buscamos 'Sevilla FC'
+                ubicacion = "Fuera"
+                if "Sevilla" in local_name:
+                    ubicacion = "Casa"
+                    rival = visitante_name
+                else:
+                    rival = local_name
+                
+                data_futbol.append({
+                    "titulo": f"Sevilla FC vs {rival}",
+                    "asignatura": "Fútbol", # Para agrupar si hace falta
+                    "aula": ubicacion, # Casa / Fuera
+                    "fecha": fecha_iso,
+                    "hora": hora_txt,
+                    "dia_completo": es_dia_completo,
+                    "es_futbol": True
+                })
+                
+            except Exception as e_row: 
+                # print(f"Error row: {e_row}")
+                pass
+                
+        if driver_propio: driver.quit()
+        
+        # Guardar
+        with open("horario_futbol.json", 'w', encoding='utf-8') as f:
+            json.dump(data_futbol, f, indent=4, ensure_ascii=False)
+            
+        return data_futbol
+
+    except Exception as e:
+        st.error(f"Error cargando fútbol: {e}")
+        if driver_propio: driver.quit()
         return []
 
 # --- GESTIÓN DE PERSISTENCIA (GITHUB) ----
@@ -884,9 +967,24 @@ def main():
         st.session_state["mensaje_global"] = None
         
     # --- AUTO-UPDATE HORARIO CLASES ---
-    with st.spinner("Sincronizando horario universitario..."):
-        horario_clases_scraped = actualizar_horario_clases()
-       
+    # Comentado para no bloquear al inicio, se usa manual
+    # with st.spinner("Sincronizando horario universitario..."):
+    #     horario_clases_scraped = actualizar_horario_clases()
+    
+    # Cargar Horario Clases (Cache)
+    try:
+        with open(HORARIO_FILE, 'r', encoding='utf-8') as f:
+            horario_clases_scraped = json.load(f)
+    except:
+        horario_clases_scraped = []
+        
+    # Cargar Horario Futbol (Cache)
+    try:
+        with open("horario_futbol.json", 'r', encoding='utf-8') as f:
+            horario_futbol_scraped = json.load(f)
+    except:
+        horario_futbol_scraped = []
+        
     # --- GESTOR DE DATOS (PERSISTENCIA) ---
     tareas = gestionar_tareas('leer')
     horario_dinamico = gestionar_horario('leer')
@@ -932,16 +1030,20 @@ def main():
         st.info(f"Mirando: **{fecha_seleccionada.strftime('%d %b')}**")
         
         if st.button("🔄 Actualizar Horario"):
-            actualizar_horario_clases(force=True)
+            with st.spinner("Actualizando Loyola y Sevilla FC..."):
+                driver = init_driver()
+                actualizar_horario_clases(force=True, driver=driver)
+                actualizar_horario_sevilla(driver=driver)
+                if driver: driver.quit()
             st.rerun()
 
     # --- ENRUTADOR DE VISTAS ---
     if vista_actual == "Diaria":
-        render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped)
+        render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped, horario_futbol_scraped)
     elif vista_actual == "Semanal":
-        render_vista_semanal(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped)
+        render_vista_semanal(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped, horario_futbol_scraped)
     elif vista_actual == "Mensual":
-        render_vista_mensual(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped)
+        render_vista_mensual(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped, horario_futbol_scraped)
     elif vista_actual == "➕ Nueva Tarea":
         render_vista_nueva_tarea()
     elif vista_actual == "➕ Nuevo Evento/Horario":
@@ -951,7 +1053,7 @@ def main():
 
 # --- IMPLEMENTACIÓN DE VISTAS ---
 
-def render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped):
+def render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico, horario_clases_scraped, horario_futbol_scraped):
     # --- AVISO DE TAREAS ATRASADAS ---
     hoy_real = get_madrid_date()
     tareas_atrasadas = []
@@ -1001,6 +1103,17 @@ def render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico, horario_cl
                     "es_universidad": True
                 })
         
+        # 1.5 Futbol Scrapeado
+        for f in horario_futbol_scraped:
+             if f['fecha'] == fecha_sel_str:
+                 h_txt = f['hora'] if f['hora'] else "Todo el día"
+                 clases_hoy.append({
+                     "hora": h_txt,
+                     "asignatura": f["titulo"],
+                     "aula": f["aula"],
+                     "es_futbol": True
+                 })
+
         # 2. Horario Dinámico (JSON)
         for item in horario_dinamico:
             es_hoy = False
@@ -1030,7 +1143,12 @@ def render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico, horario_cl
         if clases_hoy:
             for clase in clases_hoy:
                 # Estilo diferente para Universidad vs Dinamico
-                icon = "🎓" if clase.get('es_universidad') else "🏋️" if "gym" in clase['asignatura'].lower() else "📅"
+                icon = "🎓" 
+                if clase.get('es_universidad'): icon = "🎓"
+                elif clase.get('es_futbol'): icon = "⚽"
+                elif "gym" in clase['asignatura'].lower(): icon = "🏋️"
+                else: icon = "📅"
+                
                 st.success(f"**{clase['hora']}**\n\n{icon} {clase['asignatura']}\n\n📍 {clase['aula']}")
         else:
             st.info("No hay clases ni eventos programados.")
@@ -1148,7 +1266,7 @@ def render_vista_diaria(tareas, fecha_seleccionada, horario_dinamico, horario_cl
                         else:
                             c2.write("✅")
 
-def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_scraped):
+def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_scraped, horario_futbol_scraped):
     # CSS HACK: Forzar layout horizontal en móvil con escalado automático
     st.markdown("""
         <style>
@@ -1307,6 +1425,19 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                          "raw": c 
                      })
              
+            # 1.5 Futbol
+            for f in horario_futbol_scraped:
+                if f['fecha'] == dia_str:
+                    items_visuales.append({
+                        "tipo": "Futbol",
+                        "titulo": f['titulo'],
+                        "hora_sort": f['hora'] if f['hora'] else "00:00",
+                        "hora": f['hora'] if f['hora'] else "TBD",
+                        "aula": f['aula'],
+                        "es_futbol": True,
+                        "raw": f
+                    })
+
             # 2. Horario Dinamico
             for item in horario_dinamico:
                 es_este_dia = False
@@ -1375,6 +1506,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
             for item in items_visuales:
                 icon = "🗓️"
                 if item['tipo'] == 'Clase': icon = "🎓" # Clase
+                elif item['tipo'] == 'Futbol': icon = "⚽"
                 elif item['tipo'] == 'tarea': icon = item.get('msg_icon', "📝")
                 elif item.get('es_rutina'): icon = "🔄"
                 
@@ -1404,7 +1536,7 @@ NOMBRES_MESES = {
 }
 DIAS_SEMANA_ABR = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
 
-def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_scraped):
+def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_scraped, horario_futbol_scraped):
     # CSS HACK force horizontal
     st.markdown("""
         <style>
@@ -1523,6 +1655,19 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                             "raw": c
                         })
 
+                # 1.5 Futbol
+                for f in horario_futbol_scraped:
+                    if f['fecha'] == dia_str:
+                         items_visuales.append({
+                            "tipo": "Futbol",
+                            "titulo": f['titulo'],
+                            "hora_sort": f['hora'] if f['hora'] else "00:00",
+                            "hora": f['hora'] if f['hora'] else "TBD",
+                            "aula": f['aula'],
+                            "es_futbol": True,
+                            "raw": f
+                         })
+
                 # 2. Horario Dinamico
                 for item in horario_dinamico:
                     es_este_dia_m = False
@@ -1578,6 +1723,7 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 for item in items_visuales:
                     icon = "▫️"
                     if item['tipo'] == 'Clase': icon = "🎓"
+                    elif item['tipo'] == 'Futbol': icon = "⚽"
                     elif item['tipo'] == 'tarea': icon = item.get('msg_icon', "📝")
                     elif item.get('es_rutina'): icon = "🔄"
                     
