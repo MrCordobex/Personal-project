@@ -253,7 +253,7 @@ def actualizar_horario_clases(force=False):
         st.error(f"Error actualizando horario: {e}")
         return []
 
-# --- GESTIÓN DE PERSISTENCIA (GITHUB) ---
+# --- GESTIÓN DE PERSISTENCIA (GITHUB) ----
 
 def obtener_conexion_repo():
     """Conecta con la API de GitHub usando el token almacenado en secrets."""
