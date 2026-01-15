@@ -20,5 +20,16 @@
         "fecha_fin": null,
         "dia_completo": false,
         "hora": "16:30"
+    },
+    {
+        "id": 1768473699,
+        "titulo": "Trabajos DeepLearning",
+        "prioridad": "Importante",
+        "tipo": "Entrega",
+        "estado": "Pendiente",
+        "fecha": "2026-01-15",
+        "fecha_fin": "2026-02-06",
+        "dia_completo": false,
+        "hora": "23:00"
     }
 ]
