@@ -25,5 +25,16 @@
         "fecha": "2026-01-15",
         "hora_inicio": "21:00",
         "hora_fin": "22:00"
+    },
+    {
+        "id": 1768473965,
+        "titulo": "Reuni\u00f3n SEMNI",
+        "ubicacion": "Google meet",
+        "tipo": "Evento",
+        "es_rutina": false,
+        "dias_semana": [],
+        "fecha": "2026-01-20",
+        "hora_inicio": "10:00",
+        "hora_fin": "11:00"
     }
 ]
