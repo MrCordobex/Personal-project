@@ -1256,10 +1256,10 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 elif item['tipo'] == 'tarea': icon = item.get('msg_icon', "📝")
                 elif item.get('es_rutina'): icon = "🔄"
                 
-                # Label corto
+                # Label corto (Icono primero para que funcione el recorte CSS en móvil)
                 time_lbl = item['hora_sort']
-                trunc_title = (item['titulo'][:12] + '..') if len(item['titulo']) > 12 else item['titulo']
-                label = f"{time_lbl} {icon} {trunc_title}"
+                trunc_title = (item['titulo'][:10] + '..') if len(item['titulo']) > 10 else item['titulo']
+                label = f"{icon} {time_lbl} {trunc_title}"
                 
                 # Key unica
                 try:
