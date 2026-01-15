@@ -1445,10 +1445,11 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
     calendar.setfirstweekday(calendar.MONDAY)
     cal = calendar.monthcalendar(fecha_base.year, fecha_base.month)
     
-    # Cabecera
-    cols_header = st.columns(7)
-    for i, d in enumerate(DIAS_SEMANA_ABR):
-        cols_header[i].markdown(f"<div style='text-align:center; background-color: #262730; padding: 5px; border-radius: 4px; margin-bottom: 5px;'><strong>{d}</strong></div>", unsafe_allow_html=True)
+    # Cabecera (ELIMINADO A PETICIÓN DE USUARIO)
+    # cols_header = st.columns(7)
+    # for i, d in enumerate(DIAS_SEMANA_ABR):
+    #     cols_header[i].markdown(f"<div style='text-align:center; background-color: #262730; padding: 5px; border-radius: 4px; margin-bottom: 5px;'><strong>{d}</strong></div>", unsafe_allow_html=True)
+
         
     for week in cal:
         cols = st.columns(7)
