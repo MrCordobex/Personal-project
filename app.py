@@ -1075,14 +1075,19 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     text-align: center !important; 
                 }
                 
-                 /* Headers de la Semana (Lun, Mar...) - Ajuste fino para que no salten de linea */
-                 div[data-testid="column"] > div > div > div > strong {
+                /* CLASE PERSONALIZADA para el Header (inyectada en el HTML abajo) */
+                .mobile-header-text {
                     font-size: 3vw !important;
-                 }
-                 div[data-testid="column"] > div > div > div:nth-child(2) {
-                    font-size: 3.5vw !important; /* El numero del dia */
                     padding: 0 !important;
-                 }
+                    margin: 0 !important;
+                    line-height: normal !important;
+                }
+                .mobile-header-num {
+                    font-size: 3.5vw !important;
+                    padding: 0 !important;
+                     margin: 0 !important;
+                     line-height: normal !important;
+                }
 
                 /* Botones: ICON ONLY MODE */
                 div[data-testid="stButton"] button {
@@ -1098,20 +1103,19 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                  div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
-                    /* TRUCO: Recortar texto para dejar solo el primer caracter (Icono) */
                     width: 100% !important;
                     white-space: nowrap !important;
                     overflow: hidden !important;
-                    text-overflow: clip !important; /* Cortar, no puntos suspensivos */
+                    text-overflow: clip !important;
                     display: block !important;
-                    max-width: 1.5em !important; /* Solo cabe el emoji */
-                    margin: 0 auto !important; /* Centrado */
+                    max-width: 1.5em !important;
+                    margin: 0 auto !important;
                 }
                 
                 /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) */
                 div[data-testid="stDialog"] div[data-testid="stHorizontalBlock"] {
                     display: flex !important;
-                    gap: 5px !important; /* Reducir gap entre icono de cabecera y titulo */
+                    gap: 5px !important; 
                     grid-template-columns: none !important;
                 }
                 div[data-testid="stDialog"] div[data-testid="column"] {
@@ -1154,12 +1158,13 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
             
         with col:
             # Header
+            # Header con Clases Custom para CSS targeting
             st.markdown(f"""
             <div style='text-align: center; border-bottom: {header_border}; margin-bottom:5px;'>
                 <div style='background-color: {header_bg}; color: {text_color}; border-radius: 4px 4px 0 0; padding: 2px;'>
-                    <strong>{dias_semana_lbl[i]}</strong>
+                    <strong class="mobile-header-text">{dias_semana_lbl[i]}</strong>
                 </div>
-                <div style='font-size:1.2em; padding: 5px;'>{dia_actual.day}</div>
+                <div class="mobile-header-num" style='font-size:1.2em; padding: 5px;'>{dia_actual.day}</div>
             </div>""", unsafe_allow_html=True)
             
             # --- RECOLECCIÓN DE ITEMS ---
