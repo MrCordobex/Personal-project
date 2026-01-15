@@ -1112,12 +1112,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     margin: 0 auto !important;
                 }
                 
-                /* EXCEPCION TOTAL: RESETEAR TODO DENTRO DEL DIALOGO */
-                div[data-testid="stDialog"] * {
-                    all: revert; /* Intento de reset, pero reforzamos abajo */
-                    font-family: "Source Sans Pro", sans-serif !important;
-                }
-                
+                /* EXCEPCION TOTAL: RESETEAR TEXTOS DENTRO DEL DIALOGO SIN BORRAR ESTILOS NATIVOS */
                 div[data-testid="stDialog"] h1, div[data-testid="stDialog"] h2, div[data-testid="stDialog"] h3 {
                      font-size: 1.5rem !important;
                      color: var(--text-color) !important;
