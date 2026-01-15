@@ -1097,6 +1097,19 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     max-width: 1.5em !important;
                     margin: 0 auto !important;
                 }
+                
+                /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) */
+                div[data-testid="stDialog"] div[data-testid="stHorizontalBlock"] {
+                    display: flex !important;
+                    gap: 10px !important;
+                    grid-template-columns: none !important;
+                }
+                div[data-testid="stDialog"] div[data-testid="column"] {
+                    flex: 1 !important;
+                    width: auto !important;
+                    max-width: none !important;
+                    min-width: 0 !important;
+                }
             }
         }
         </style>
@@ -1298,6 +1311,19 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                      margin: 0 !important;
                      padding: 0 !important;
                      text-align: center !important;
+                }
+                
+                /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) */
+                div[data-testid="stDialog"] div[data-testid="stHorizontalBlock"] {
+                    display: flex !important;
+                    gap: 10px !important;
+                    grid-template-columns: none !important;
+                }
+                div[data-testid="stDialog"] div[data-testid="column"] {
+                    flex: 1 !important;
+                    width: auto !important;
+                    max-width: none !important;
+                    min-width: 0 !important;
                 }
             }
         }
