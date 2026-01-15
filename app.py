@@ -871,7 +871,7 @@ def mostrar_detalle_item(item):
 # --- UI Y LÓGICA ---
 
 def main():
-    st.title("🎓 Academic Task Planner")
+    st.title("🎓 AutoGestor")
 
     # --- NOTIFICACIONES GLOBLALES ---
     if "mensaje_global" in st.session_state and st.session_state["mensaje_global"]:
