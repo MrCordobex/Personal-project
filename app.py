@@ -323,27 +323,32 @@ def actualizar_horario_sevilla(driver=None):
                     pass
                 
                 # 4. Casa / Fuera
+                def format_team(name):
+                    # Capitalize nicely. "SEVILLA FC" -> "Sevilla FC"
+                    # .title() hace "Sevilla Fc".
+                    parts = name.strip().split(" ")
+                    fixed = []
+                    for p in parts:
+                        if p.lower() in ["fc", "cf", "sfc", "cd"]:
+                            fixed.append(p.upper())
+                        elif p.lower() in ["de", "del", "la", "el"]:
+                             fixed.append(p.lower())
+                        else:
+                            fixed.append(p.capitalize())
+                    return " ".join(fixed)
+
+                local_fmt = format_team(local_name)
+                visitante_fmt = format_team(visitante_name)
+                
                 ubicacion = "Fuera"
-                local_lower = local_name.lower()
-                visitante_lower = visitante_name.lower()
-                
-                rival = local_name # Default
-                
-                if "sevilla" in local_lower or "sfc" in local_lower:
+                if "sevilla" in local_name.lower() or "sfc" in local_name.lower():
                     ubicacion = "Casa"
-                    rival = visitante_name
-                elif "sevilla" in visitante_lower or "sfc" in visitante_lower:
-                    ubicacion = "Fuera"
-                    rival = local_name
                 
-                # Check de cordura: Si rival sigue siendo sevilla, algo fallo
-                if "sevilla" in rival.lower() and "sevilla" not in local_lower:
-                     rival = local_name
-                elif "sevilla" in rival.lower() and "sevilla" not in visitante_lower:
-                     rival = visitante_name
+                # Titulo siempre Local vs Visitante
+                titulo_partido = f"{local_fmt} vs {visitante_fmt}"
 
                 data_futbol.append({
-                    "titulo": f"Sevilla FC vs {rival}",
+                    "titulo": titulo_partido,
                     "asignatura": "Fútbol",
                     "aula": ubicacion,
                     "fecha": fecha_iso,
