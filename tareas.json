@@ -64,5 +64,16 @@
         "fecha_fin": "2026-01-15",
         "dia_completo": false,
         "hora": "14:00"
+    },
+    {
+        "id": 1768474608,
+        "titulo": "Preguntas mesa redonda",
+        "prioridad": "Normal",
+        "tipo": "Entrega",
+        "estado": "Pendiente",
+        "fecha": "2026-01-16",
+        "fecha_fin": null,
+        "dia_completo": true,
+        "hora": null
     }
 ]
