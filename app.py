@@ -18,7 +18,7 @@ import time as time_lib
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
-    page_title="Academic Task Planner",
+    page_title="AutoGestor",
     layout="wide",
     initial_sidebar_state="expanded"
 )
