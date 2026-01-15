@@ -199,6 +199,23 @@ def actualizar_horario_clases(force=False):
                         asig = parts[0].strip()
                         aula = parts[1].replace("Aula:", "").strip() if len(parts) > 1 else "Desconocido"
                         
+                        # CORRECCIÓN UTC AHORA (+1 hora manual)
+                        # El texto suele ser "15:00 - 17:00" y la web lo sirve asi en headless.
+                        # Vamos a sumar 1 hora a ambas partes.
+                        try:
+                            # hora_text = "15:00 - 19:00"
+                            h_parts = hora_text.split("-")
+                            new_times = []
+                            for hp in h_parts:
+                                t_obj = datetime.strptime(hp.strip(), "%H:%M")
+                                t_new = t_obj + timedelta(hours=1)
+                                new_times.append(t_new.strftime("%H:%M"))
+                            
+                            hora_text = f"{new_times[0]} - {new_times[1]}"
+                        except:
+                            # Si falla el parseo (texto raro), lo dejamos tal cual
+                            pass
+
                         data_clases.append({
                             "asignatura": asig,
                             "aula": aula,
@@ -1267,8 +1284,7 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     elif item['tipo'] == 'tarea': icon = item.get('msg_icon', "📝")
                     elif item.get('es_rutina'): icon = "🔄"
                     
-                    label_m = f"{icon}"
-                    title_full = item['titulo']
+                    label_m = f"{icon} {title_full}" # Ahora mostramos icono Y titulo
                     
                     # Key única mensual
                     try: 
@@ -1276,6 +1292,7 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     except: s_id = "u"
                     key_m = f"btn_m_{day_num}_{s_id}_{item['hora_sort']}"
                     
+                    # Tooltip ayuda, label truncado si es muy largo visualmente lo corta streamlit
                     if st.button(label_m, key=key_m, help=f"{item['hora_sort']} - {title_full}", use_container_width=True):
                         mostrar_detalle_item(item['raw'])
 
