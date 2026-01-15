@@ -1047,27 +1047,28 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 }
             }
 
-            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - CSS GRID REVOLUTION */
+            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - CSS GRID SCOPED (FINAL) */
             @media (orientation: portrait) and (max-width: 600px) {
-                 div[data-testid="stHorizontalBlock"] {
+                 /* APUNTAR SOLO AL CALENDARIO (7 COLUMNAS) */
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) {
                     display: grid !important;
                     grid-template-columns: repeat(7, 1fr) !important;
-                    gap: 1px !important; /* Minima separacion */
+                    gap: 1px !important;
                     width: 100% !important;
-                    min-width: 0 !important;
                  }
                  
-                 div[data-testid="column"] {
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) > div[data-testid="column"] {
                     width: auto !important;
                     min-width: 0 !important;
-                    max-width: none !important;
                     padding: 0 !important;
                     margin: 0 !important;
-                    flex: none !important; /* Desactivar flex en hijos */
+                    flex: none !important;
                  }
                  
-                 /* Limpiamos margenes texto */
-                 div[data-testid="column"] p, div[data-testid="column"] div, div[data-testid="column"] strong {
+                 /* Limpiamos margenes texto SOLO EN CALENDARIO */
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] p,
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] div, 
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] strong {
                     font-size: 3.5vw !important; 
                     line-height: normal !important;
                     margin: 0 !important;
@@ -1075,7 +1076,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     text-align: center !important; 
                 }
                 
-                /* CLASE PERSONALIZADA para el Header (inyectada en el HTML abajo) */
+                /* Headers Custom */
                 .mobile-header-text {
                     font-size: 3vw !important;
                     padding: 0 !important;
@@ -1089,8 +1090,8 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                      line-height: normal !important;
                 }
 
-                /* Botones: ICON ONLY MODE */
-                div[data-testid="stButton"] button {
+                /* Botones: ICON ONLY MODE (SOLO EN CALENDARIO) */
+                div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button {
                     font-size: 4vw !important;
                     padding: 0px !important;
                     min-height: 25px !important;
@@ -1100,7 +1101,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     background-color: transparent !important;
                     margin: 0 !important;
                 }
-                 div[data-testid="stButton"] button p {
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
                     width: 100% !important;
@@ -1112,46 +1113,22 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     margin: 0 auto !important;
                 }
                 
-                /* EXCEPCION TOTAL: RESETEAR TEXTOS DENTRO DEL DIALOGO SIN BORRAR ESTILOS NATIVOS */
-                div[data-testid="stDialog"] h1, div[data-testid="stDialog"] h2, div[data-testid="stDialog"] h3 {
-                     font-size: 1.5rem !important;
-                     color: var(--text-color) !important;
-                }
-
+                /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) */
                 div[data-testid="stDialog"] div[data-testid="stHorizontalBlock"] {
                     display: flex !important;
                     flex-direction: row !important;
                     gap: 10px !important;
                     width: 100% !important;
-                    background-color: transparent !important;
+                    grid-template-columns: none !important;
                 }
                 
                 div[data-testid="stDialog"] div[data-testid="column"] {
-                    flex: 1 !important; /* Dejar que fluya natural */
+                    flex: 1 !important; 
                     width: auto !important;
                     min-width: 0 !important;
                     max-width: none !important;
                     padding: 0 !important;
                     margin: 0 !important;
-                }
-                
-                /* Resetear textos especificos */
-                div[data-testid="stDialog"] p, div[data-testid="stDialog"] li, div[data-testid="stDialog"] div, div[data-testid="stDialog"] span, div[data-testid="stDialog"] strong {
-                    font-size: 16px !important;
-                    line-height: 1.4 !important;
-                    text-align: left !important;
-                    white-space: normal !important;
-                    overflow: visible !important;
-                    width: auto !important;
-                    color: inherit !important;
-                }
-                
-                /* Restaurar columna 1 y 2 */
-                div[data-testid="stDialog"] div[data-testid="column"]:nth-child(1) {
-                    flex: 0 0 50px !important; /* Ancho fijo para icono */
-                }
-                div[data-testid="stDialog"] div[data-testid="column"]:nth-child(2) {
-                    flex: 1 !important; /* El resto para texto */
                 }
             }
         }
