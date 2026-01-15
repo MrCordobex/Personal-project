@@ -14,5 +14,16 @@
         "fecha": null,
         "hora_inicio": "08:00",
         "hora_fin": "09:30"
+    },
+    {
+        "id": 1768473087,
+        "titulo": "Quedada Carmen",
+        "ubicacion": "Nervion",
+        "tipo": "Evento",
+        "es_rutina": false,
+        "dias_semana": [],
+        "fecha": "2026-01-15",
+        "hora_inicio": "21:00",
+        "hora_fin": "22:00"
     }
 ]
