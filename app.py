@@ -324,15 +324,24 @@ def actualizar_horario_sevilla(driver=None):
                 
                 # 4. Casa / Fuera
                 ubicacion = "Fuera"
-                rival = local_name
+                local_lower = local_name.lower()
+                visitante_lower = visitante_name.lower()
                 
-                if "Sevilla" in local_name or "SFC" in local_name:
+                rival = local_name # Default
+                
+                if "sevilla" in local_lower or "sfc" in local_lower:
                     ubicacion = "Casa"
                     rival = visitante_name
-                elif "Sevilla" in visitante_name or "SFC" in visitante_name:
+                elif "sevilla" in visitante_lower or "sfc" in visitante_lower:
                     ubicacion = "Fuera"
                     rival = local_name
                 
+                # Check de cordura: Si rival sigue siendo sevilla, algo fallo
+                if "sevilla" in rival.lower() and "sevilla" not in local_lower:
+                     rival = local_name
+                elif "sevilla" in rival.lower() and "sevilla" not in visitante_lower:
+                     rival = visitante_name
+
                 data_futbol.append({
                     "titulo": f"Sevilla FC vs {rival}",
                     "asignatura": "Fútbol",
