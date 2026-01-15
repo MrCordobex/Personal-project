@@ -58,5 +58,16 @@
         "fecha": "2026-02-03",
         "hora_inicio": "10:30",
         "hora_fin": "14:00"
+    },
+    {
+        "id": 1768474174,
+        "titulo": "Despedida Alicia",
+        "ubicacion": "Hacienda",
+        "tipo": "Evento",
+        "es_rutina": false,
+        "dias_semana": [],
+        "fecha": "2026-01-25",
+        "hora_inicio": "12:00",
+        "hora_fin": "17:00"
     }
 ]
