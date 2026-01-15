@@ -1047,9 +1047,10 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 }
             }
 
-            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - CSS GRID REVOLUTION */
+            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - CSS GRID VOL 2 (SCOPED) */
             @media (orientation: portrait) and (max-width: 600px) {
-                 div[data-testid="stHorizontalBlock"] {
+                 /* APUNTAR SOLO A LOS BLOQUES QUE TIENEN 7 COLUMNAS (El calendario) */
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) {
                     display: grid !important;
                     grid-template-columns: repeat(7, 1fr) !important;
                     gap: 1px !important; /* Minima separacion */
@@ -1057,17 +1058,20 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     min-width: 0 !important;
                  }
                  
-                 div[data-testid="column"] {
+                 /* Y sus hijos directos */
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) > div[data-testid="column"] {
                     width: auto !important;
                     min-width: 0 !important;
                     max-width: none !important;
                     padding: 0 !important;
                     margin: 0 !important;
-                    flex: none !important; /* Desactivar flex en hijos */
+                    flex: none !important; 
                  }
                  
-                 /* Limpiamos margenes texto */
-                 div[data-testid="column"] p, div[data-testid="column"] div, div[data-testid="column"] strong {
+                 /* Estilos de texto dento del Grid del Calendario */
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] p, 
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] div, 
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] strong {
                     font-size: 3.5vw !important; 
                     line-height: normal !important;
                     margin: 0 !important;
@@ -1075,8 +1079,8 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     text-align: center !important; 
                 }
                 
-                /* Botones: ICON ONLY MODE */
-                div[data-testid="stButton"] button {
+                /* Botones: ICON ONLY MODE (Solo dentro del calendario) */
+                div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button {
                     font-size: 4vw !important;
                     padding: 0px !important;
                     min-height: 25px !important;
@@ -1086,7 +1090,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     background-color: transparent !important;
                     margin: 0 !important;
                 }
-                 div[data-testid="stButton"] button p {
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
                     width: 100% !important;
@@ -1257,15 +1261,15 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
     # CSS HACK force horizontal
     st.markdown("""
         <style>
-            /* Ajustes PORTRAIT MENSUAL - CSS GRID */
+            /* Ajustes PORTRAIT MENSUAL - CSS GRID SCOPED */
             @media (orientation: portrait) and (max-width: 600px) {
-                 div[data-testid="stHorizontalBlock"] {
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) {
                     display: grid !important;
                     grid-template-columns: repeat(7, 1fr) !important;
                     gap: 1px !important;
                     width: 100% !important;
                  }
-                  div[data-testid="column"] {
+                  div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) > div[data-testid="column"] {
                     width: auto !important;
                     min-width: 0 !important;
                     max-width: none !important;
@@ -1274,7 +1278,7 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     flex: none !important;
                  }
                 
-                 div[data-testid="stButton"] button {
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button {
                     padding: 0px !important;
                     background-color: transparent !important; 
                     border: none !important;
@@ -1282,7 +1286,7 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     height: 20px !important;
                     margin: 0 !important;
                 }
-                 div[data-testid="stButton"] button p {
+                 div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
                     width: 100% !important;
@@ -1293,7 +1297,7 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     max-width: 1.5em !important;
                     margin: 0 auto !important;
                 }
-                div[data-testid="column"] div[data-testid="stMarkdown"] p {
+                div[data-testid="stHorizontalBlock"]:has(> div[data-testid="column"]:nth-child(7)) div[data-testid="column"] div[data-testid="stMarkdown"] p {
                      font-size: 2.5vw !important;
                      margin: 0 !important;
                      padding: 0 !important;
