@@ -103,10 +103,12 @@
         "titulo": "Prueba",
         "prioridad": "Normal",
         "tipo": "Examen",
-        "estado": "Pendiente",
+        "estado": "Completada",
         "fecha": "2026-01-14",
         "fecha_fin": null,
         "dia_completo": true,
-        "hora": null
+        "hora": null,
+        "msg": "",
+        "urgente": false
     }
 ]
