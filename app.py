@@ -1029,7 +1029,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
     # CSS HACK: Forzar layout horizontal en móvil con escalado automático
     st.markdown("""
         <style>
-            /* Ajustes BASICOS para móvil (Tablet/Horizontal) */
+            /* Ajustes BASICOS para móvil (Tablet/Horizontal + Vertical) */
             @media (max-width: 900px) {
                 div[data-testid="stHorizontalBlock"] {
                     width: 100% !important;
@@ -1041,43 +1041,43 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 }
                 div[data-testid="column"] {
                     flex: 1 1 0 !important;
-                    width: auto !important;
                     min-width: 0 !important;
+                    width: 0 !important; /* Truco para que flex funcione con min-width 0 */
+                    padding: 0 !important;
                 }
             }
-            
-            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - NUCLEAR */
+
+            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - MODO "PUNTOS/ICONOS" */
             @media (orientation: portrait) and (max-width: 600px) {
-                 div[data-testid="stHorizontalBlock"] {
-                    width: 100% !important;
-                    display: flex !important;
-                 }
-                 div[data-testid="column"] {
-                    flex: 0 0 14.28% !important; /* Forzar ancho estricto */
-                    width: 14.28% !important;
-                    max-width: 14.28% !important;
-                    min-width: 0 !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                 }
-                 /* Letra minúscula para caber */
+                 /* Limpiamos margenes de dias */
                  div[data-testid="column"] p, div[data-testid="column"] div, div[data-testid="column"] strong {
-                    font-size: 2vw !important; 
+                    font-size: 3vw !important; 
                     line-height: normal !important;
-                    padding: 0 !important;
                     margin: 0 !important;
+                    text-align: center !important; 
                 }
-                /* Botones comprimidos */
+                
+                /* Botones: Convertir en "Puntos/Iconos" recortando el texto */
                 div[data-testid="stButton"] button {
-                    font-size: 1.8vw !important;
+                    font-size: 3.5vw !important; /* Icono un poco mas grande */
                     padding: 0px !important;
-                    min-height: 12px !important;
-                    height: auto !important;
-                    line-height: 1 !important;
+                    min-height: 25px !important; /* Altura fija para el "punto" */
+                    height: 25px !important;
+                    width: 100% !important;
+                    border: none !important; /* Sin bordes para aspecto limpio */
+                    background-color: transparent !important; /* Opcional: transparente para ver solo icono */
                 }
                  div[data-testid="stButton"] button p {
-                    font-size: 1.8vw !important;
+                    font-size: 4vw !important;
                     padding: 0 !important;
+                    /* TRUCO: Recortar texto para dejar solo el primer caracter (Icono) */
+                    width: 100% !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: clip !important; /* Cortar, no puntos suspensivos */
+                    display: block !important;
+                    max-width: 1.5em !important; /* Solo cabe el emoji */
+                    margin: 0 auto !important; /* Centrado */
                 }
             }
         }
@@ -1239,38 +1239,32 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
     # CSS HACK force horizontal
     st.markdown("""
         <style>
-            /* Ajustes PORTRAIT MENSUAL - NUCLEAR */
+            /* Ajustes PORTRAIT MENSUAL - MODO "PUNTOS/ICONOS" */
             @media (orientation: portrait) and (max-width: 600px) {
-                 div[data-testid="stHorizontalBlock"] {
-                    width: 100% !important;
-                    min-width: 0 !important;
-                    flex-direction: row !important;
-                    flex-wrap: nowrap !important; /* Asegurar no wrap */
-                    gap: 0 !important;
-                 }
-                 div[data-testid="column"] {
-                    flex: 0 0 14.28% !important;
-                    width: 14.28% !important;
-                    max-width: 14.28% !important;
-                    min-width: 0 !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                 }
                  div[data-testid="stButton"] button {
                     padding: 0px !important;
-                    font-size: 1.5vw !important; /* Aún más pequeño */
-                    min-height: 12px !important;
-                    height: auto !important;
-                    line-height: 1 !important;
+                    background-color: transparent !important; 
+                    border: none !important;
+                    min-height: 20px !important;
+                    height: 20px !important;
                 }
+                 /* Cortar texto dejando solo icono */
                  div[data-testid="stButton"] button p {
-                    font-size: 1.5vw !important;
+                    font-size: 4vw !important;
                     padding: 0 !important;
+                    width: 100% !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: clip !important;
+                    display: block !important;
+                    max-width: 1.5em !important;
+                    margin: 0 auto !important;
                 }
                 div[data-testid="column"] div[data-testid="stMarkdown"] p {
-                     font-size: 1.8vw !important;
+                     font-size: 2.5vw !important;
                      margin: 0 !important;
                      padding: 0 !important;
+                     text-align: center !important;
                 }
             }
         }
