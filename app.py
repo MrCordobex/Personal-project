@@ -1075,6 +1075,15 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     text-align: center !important; 
                 }
                 
+                 /* Headers de la Semana (Lun, Mar...) - Ajuste fino para que no salten de linea */
+                 div[data-testid="column"] > div > div > div > strong {
+                    font-size: 3vw !important;
+                 }
+                 div[data-testid="column"] > div > div > div:nth-child(2) {
+                    font-size: 3.5vw !important; /* El numero del dia */
+                    padding: 0 !important;
+                 }
+
                 /* Botones: ICON ONLY MODE */
                 div[data-testid="stButton"] button {
                     font-size: 4vw !important;
@@ -1089,19 +1098,20 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                  div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
+                    /* TRUCO: Recortar texto para dejar solo el primer caracter (Icono) */
                     width: 100% !important;
                     white-space: nowrap !important;
                     overflow: hidden !important;
-                    text-overflow: clip !important;
+                    text-overflow: clip !important; /* Cortar, no puntos suspensivos */
                     display: block !important;
-                    max-width: 1.5em !important;
-                    margin: 0 auto !important;
+                    max-width: 1.5em !important; /* Solo cabe el emoji */
+                    margin: 0 auto !important; /* Centrado */
                 }
                 
                 /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) */
                 div[data-testid="stDialog"] div[data-testid="stHorizontalBlock"] {
                     display: flex !important;
-                    gap: 10px !important;
+                    gap: 5px !important; /* Reducir gap entre icono de cabecera y titulo */
                     grid-template-columns: none !important;
                 }
                 div[data-testid="stDialog"] div[data-testid="column"] {
@@ -1109,6 +1119,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     width: auto !important;
                     max-width: none !important;
                     min-width: 0 !important;
+                    padding: 0 5px !important;
                 }
             }
         }
