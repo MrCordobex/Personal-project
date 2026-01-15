@@ -704,11 +704,75 @@ def render_tarjeta_gestion(t):
                         st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "✏️ Tarea actualizada"}
                         st.rerun()
                         
+                            
             # 3. Borrar
             if ca3.button("🗑️", key=f"del_main_{t['id']}", help="Borrar tarea"):
                 gestionar_tareas('borrar', id_tarea_eliminar=t['id'])
                 st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "🗑️ Tarea eliminada"}
                 st.rerun()
+
+# --- DIÁLOGO DE DETALLES ---
+
+@st.dialog("Detalles")
+def mostrar_detalle_item(item):
+    # Cabecera con Icono y Título
+    tipo = item.get('tipo', 'Evento')
+    titulo = item.get('titulo', 'Sin título')
+    
+    col_icon, col_tit = st.columns([1, 5])
+    with col_icon:
+        if item.get('es_universidad'): st.subheader("🎓")
+        elif item.get('es_rutina'): st.subheader("🔄")
+        elif tipo == 'tarea': st.subheader("📝")
+        else: st.subheader("📅")
+    
+    with col_tit:
+        st.subheader(titulo)
+        st.caption(f"Tipo: {tipo}")
+        
+    st.divider()
+    
+    # Información General
+    c1, c2 = st.columns(2)
+    c1.markdown(f"**🕒 Hora:** {item.get('hora', 'Todo el día')}")
+    if item.get('ubicacion'): c1.markdown(f"**📍 Ubicación:** {item['ubicacion']}")
+    # Aula para clases
+    if item.get('aula'): c1.markdown(f"**📍 Aula:** {item['aula']}")
+    
+    if item.get('fecha'): c2.markdown(f"**📅 Fecha:** {item['fecha']}")
+    
+    if item.get('dias_semana'):
+        dias_map_str = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
+        s_dias = [dias_map_str[i] for i in item['dias_semana']]
+        c2.markdown(f"**🔄 Días:** {', '.join(s_dias)}")
+
+    # Acciones específicas
+    st.divider()
+    
+    if tipo == 'tarea':
+        st.write(f"**Prioridad:** {item.get('prioridad', 'Normal')}")
+        if item.get('msg'): st.info(item['msg'])
+        
+        if item.get('estado') != 'Completada':
+            if st.button("✅ Marcar como Completada", use_container_width=True):
+                item['estado'] = 'Completada'
+                gestionar_tareas('actualizar', tarea_actualizada=item)
+                st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "Tarea completada"}
+                st.rerun()
+        else:
+            st.success("✅ Tarea ya completada")
+            
+    elif item.get('es_rutina') or (not item.get('es_universidad') and item.get('id')):
+        # Es un evento manual (Rutina o Evento unico) -> Se puede borrar
+        if st.button("🗑️ Eliminar Evento", type="primary", use_container_width=True):
+            if gestionar_horario('borrar', id_eliminar=item['id']):
+                st.session_state["mensaje_global"] = {"tipo": "exito", "texto": "Evento eliminado"}
+                st.rerun()
+            else:
+                 st.error("Error al eliminar")
+            
+    elif item.get('es_universidad'):
+        st.info("ℹ️ Este evento pertenece al horario universitario oficial.")
 
 # --- UI Y LÓGICA ---
 
@@ -949,7 +1013,7 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
     start_of_week = fecha_base - timedelta(days=fecha_base.weekday())
     
     cols = st.columns(7)
-    dias_semana = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
+    dias_semana_lbl = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
     
     for i, col in enumerate(cols):
         dia_actual = start_of_week + timedelta(days=i)
@@ -958,21 +1022,21 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
         
         # Estilo Header
         if is_selected:
-            header_bg = "#1E90FF" # Azul fuerte para seleccionado
+            header_bg = "#1E90FF"
             header_border = "3px solid #1E90FF"
         elif is_today:
-            header_bg = "#FF4B4B" # Rojo para hoy
+            header_bg = "#FF4B4B"
             header_border = "3px solid #FF4B4B"
         else:
-            header_bg = "transparent"
+            header_bg = "transparent" # o gris oscuro
             header_border = "1px solid #444"
             
         with col:
-            # Header con estilo dinámico
+            # Header
             st.markdown(f"""
             <div style='text-align: center; border-bottom: {header_border}; margin-bottom:5px;'>
                 <div style='background-color: {header_bg}; color: white; border-radius: 4px 4px 0 0; padding: 2px;'>
-                    <strong>{dias_semana[i]}</strong>
+                    <strong>{dias_semana_lbl[i]}</strong>
                 </div>
                 <div style='font-size:1.2em; padding: 5px;'>{dia_actual.day}</div>
             </div>""", unsafe_allow_html=True)
@@ -985,12 +1049,16 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
             for c in horario_clases_scraped:
                 if c['fecha'] == dia_str:
                      items_visuales.append({
-                         "tipo": "clase",
+                         "tipo": "Clase",
                          "titulo": c['asignatura'],
-                         "hora_sort": c['hora'].split('-')[0].strip(), # "09:00"
-                         "bg_color": COLORES_TIPO['Clase']
+                         "hora_sort": c['hora'].split('-')[0].strip(),
+                         "hora": c['hora'],
+                         "aula": c['aula'],
+                         "es_universidad": True,
+                         "fecha": c['fecha'],
+                         "raw": c 
                      })
-                 
+             
             # 2. Horario Dinamico
             for item in horario_dinamico:
                 es_este_dia = False
@@ -1001,10 +1069,15 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 
                 if es_este_dia:
                     items_visuales.append({
-                        "tipo": "evento",
+                        "tipo": "Evento",
                         "titulo": item['titulo'],
                         "hora_sort": item['hora_inicio'],
-                        "bg_color": "#2E8B57"
+                        "hora": f"{item['hora_inicio']} - {item['hora_fin']}",
+                        "ubicacion": item.get('ubicacion'),
+                        "es_rutina": item.get('es_rutina'),
+                        "id": item.get('id'),
+                        "dias_semana": item.get('dias_semana'),
+                        "raw": item
                     })
             
             # 3. Tareas
@@ -1014,56 +1087,64 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 fecha_t = t.get('fecha')
                 fecha_f = t.get('fecha_fin')
                 
-                # Logica visual hora
                 hora_str = t.get('hora', "23:59")
                 if t.get('dia_completo'): hora_str = "00:00"
                 if not hora_str: hora_str = "23:59"
                 
-                hora_html = ""
-                if not t.get('dia_completo', True) and t.get('hora'):
-                     hora_html = f"<div style='font-size:0.8em; opacity:0.9; margin-bottom:2px; border-bottom:1px solid rgba(255,255,255,0.2)'>🕒 {t['hora']}</div>"
-                
                 msg_tipo = "📅"
-                style_border = ""
-                color = COLORES_TIPO.get(t.get('tipo'), "gray")
+                es_deadline = False
                 
                 if fecha_t == str(dia_actual) and not fecha_f:
-                    # Fecha fija
                     pass
                 elif fecha_f == str(dia_actual):
-                    # Deadline
                     msg_tipo = "⏰"
-                    style_border = f"border: 2px solid {color};"
-                    color = "transparent" # Fondo transparente si tiene borde
+                    es_deadline = True
                 else:
-                    continue # No es de este dia
-                
-                # Si es deadline, fondo es transparente y tiene borde
-                bg_style = f"background-color: {color};" if not style_border else ""
+                   continue
                 
                 items_visuales.append({
                      "tipo": "tarea",
                      "titulo": t['titulo'],
                      "hora_sort": hora_str,
-                     "html_content": f"<div style='{bg_style} {style_border} color: white; padding: 4px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>{hora_html}{msg_tipo} <strong>{t['titulo']}</strong></div>"
+                     "hora": t.get('hora'),
+                     "dia_completo": t.get('dia_completo'),
+                     "msg_icon": msg_tipo,
+                     "es_deadline": es_deadline,
+                     "prioridad": t.get('prioridad'),
+                     "estado": t.get('estado'),
+                     "id": t['id'],
+                     "raw": t
                 })
 
-            # --- ORDENAR Y PINTAR ---
-            # Helper para sort
+            # Ordenar
             def get_sort_key(x):
-                # Intentar parsear hora
-                try:
-                    return x['hora_sort'].replace(":", "")
+                try: return x['hora_sort'].replace(":", "")
                 except: return "9999"
             
             items_visuales.sort(key=get_sort_key)
             
+            # PINTAR BOTONES
             for item in items_visuales:
-                if item['tipo'] == 'tarea':
-                    st.markdown(item['html_content'], unsafe_allow_html=True)
-                else:
-                    # Render Clase/Evento standard
-                    st.markdown(f"<div style='background-color: {item['bg_color']}; color: white; padding: 4px; border-radius: 4px; margin: 2px 0; font-size: 0.7em'>🏫 {item['titulo']}</div>", unsafe_allow_html=True)
+                icon = "🗓️"
+                if item['tipo'] == 'Clase': icon = "🎓" # Clase
+                elif item['tipo'] == 'tarea': icon = item.get('msg_icon', "📝")
+                elif item.get('es_rutina'): icon = "🔄"
+                
+                # Label corto
+                time_lbl = item['hora_sort']
+                trunc_title = (item['titulo'][:12] + '..') if len(item['titulo']) > 12 else item['titulo']
+                label = f"{time_lbl} {icon} {trunc_title}"
+                
+                # Key unica
+                try:
+                    safe_id = str(item.get('id', item['titulo'])).replace(" ", "_")
+                except: safe_id = "uniq"
+
+                key_btn = f"btn_w_{i}_{safe_id}_{item['hora_sort']}"
+                
+                # Botón
+                if st.button(label, key=key_btn, use_container_width=True):
+                    mostrar_detalle_item(item['raw'])
 
 
 # --- CONSTANTES DE FECHA (ESPAÑOL) ---
@@ -1090,44 +1171,27 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
         for i, day_num in enumerate(week):
             with cols[i]:
                 if day_num == 0:
-                    st.markdown("<div style='min-height:100px;'></div>", unsafe_allow_html=True)
+                    st.markdown("<div style='min-height:80px;'></div>", unsafe_allow_html=True)
                     continue
                 
                 dia_actual = date(fecha_base.year, fecha_base.month, day_num)
                 is_today = dia_actual == get_madrid_date()
                 is_selected = dia_actual == fecha_base
                 
-                # Definir colores y bordes
-                bg_color = "transparent"
-                if is_selected:
-                    border_color = "#1E90FF"
-                    border_width = "3px"
-                elif is_today:
-                    border_color = "#ff4b4b"
-                    border_width = "2px"
-                else:
-                    border_color = "#333"
-                    border_width = "1px"
+                # --- HEADERS DIA ---
+                border_style = "1px solid #444"
+                num_color = "#AAA"
                 
-                # --- CONSTRUCCIÓN DEL HTML DE LA CELDA ---
-                html_celda = f"""
-                <div style='
-                    min-height: 120px;
-                    border: {border_width} solid {border_color};
-                    background-color: {bg_color};
-                    border-radius: 6px;
-                    padding: 4px;
-                    margin-bottom: 4px;
-                    display: flex;
-                    flex-direction: column;
-                '>
-                """
+                if is_today:
+                    border_style = "2px solid #FF4B4B"
+                    num_color = "#FF4B4B"
+                elif is_selected:
+                    border_style = "2px solid #1E90FF"
+                    num_color = "#1E90FF"
                 
-                # Header Numero
-                color_num = "#1E90FF" if is_selected else "#ff4b4b" if is_today else "#ccc"
-                html_celda += f"<div style='text-align: right; font-weight: bold; color: {color_num}; border-bottom: 1px solid #333; margin-bottom: 4px; padding-bottom: 2px;'>{day_num}</div>"
+                st.markdown(f"<div style='text-align: right; font-weight: bold; border-bottom: {border_style}; margin-bottom: 4px; color: {num_color};'>{day_num}</div>", unsafe_allow_html=True)
                 
-                # --- RECOLECCIÓN DE ITEMS (Igual que semanal) ---
+                # --- RECOLECCIÓN DE ITEMS ---
                 items_visuales = []
                 dia_str = str(dia_actual)
                 
@@ -1135,10 +1199,14 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 for c in horario_clases_scraped:
                      if c['fecha'] == dia_str:
                         items_visuales.append({
-                            "tipo": "clase",
+                            "tipo": "Clase",
                             "titulo": c['asignatura'],
                             "hora_sort": c['hora'].split('-')[0].strip(),
-                            "bg_color": COLORES_TIPO['Clase']
+                            "hora": c['hora'],
+                            "aula": c['aula'],
+                            "es_universidad": True,
+                            "fecha": c['fecha'],
+                            "raw": c
                         })
 
                 # 2. Horario Dinamico
@@ -1151,10 +1219,15 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     
                     if es_este_dia_m:
                         items_visuales.append({
-                            "tipo": "evento",
+                            "tipo": "Evento",
                             "titulo": item['titulo'],
                             "hora_sort": item['hora_inicio'],
-                            "bg_color": "#2E8B57"
+                            "hora": f"{item['hora_inicio']} - {item['hora_fin']}",
+                            "ubicacion": item.get('ubicacion'),
+                            "es_rutina": item.get('es_rutina'),
+                            "id": item.get('id'),
+                            "dias_semana": item.get('dias_semana'),
+                            "raw": item
                         })
                 
                 # 3. Tareas
@@ -1163,44 +1236,48 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     fecha_t = t.get('fecha')
                     fecha_f = t.get('fecha_fin')
                     
-                    titulo_corto = (t['titulo'][:10] + '..') if len(t['titulo']) > 10 else t['titulo']
-                    hora_str = t.get('hora', "23:59")
-                    if t.get('dia_completo'): hora_str = "00:00"
+                    msg_tipo = "📅"
                     
-                    # Logica visual hora (Mini bloque)
-                    hora_html = ""
-                    if not t.get('dia_completo', True) and t.get('hora'):
-                        hora_html = f"<span style='font-size:0.9em; opacity:0.8; margin-right:3px'>🕒{t['hora']}</span>"
-                    
-                    color = COLORES_TIPO.get(t.get('tipo'), "gray")
-                    
-                    if fecha_t == str(dia_actual) and not fecha_f:
-                        items_visuales.append({
-                            "tipo": "tarea",
-                            "hora_sort": hora_str,
-                            "html_div": f"<div style='background-color: {color}; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; font-size: 0.75em; white-space: nowrap; overflow: hidden;' title='{t['titulo']}'>{hora_html}📅 {titulo_corto}</div>"
-                        })
-                    
-                    if fecha_f == str(dia_actual):
-                         items_visuales.append({
-                            "tipo": "tarea",
-                            "hora_sort": hora_str,
-                            "html_div": f"<div style='border: 1px solid {color}; color: white; padding: 1px 3px; border-radius: 3px; margin-bottom: 2px; font-size: 0.75em; white-space: nowrap; overflow: hidden;' title='{t['titulo']}'>{hora_html}⏰ {titulo_corto}</div>"
-                        })
+                    if fecha_t == dia_str and not fecha_f:
+                        pass
+                    elif fecha_f == dia_str:
+                        msg_tipo = "⏰"
+                    else:
+                        continue 
 
-                # Ordenar
+                    items_visuales.append({
+                         "tipo": "tarea",
+                         "titulo": t['titulo'],
+                         "hora_sort": t.get('hora', "23:59"),
+                         "hora": t.get('hora'),
+                         "msg_icon": msg_tipo,
+                         "msg": t.get('msg'),
+                         "prioridad": t.get('prioridad'),
+                         "estado": t.get('estado'),
+                         "id": t['id'],
+                         "raw": t
+                    })
+
                 items_visuales.sort(key=lambda x: x['hora_sort'].replace(":", "") if x['hora_sort'] else "9999")
                 
+                # RENDER DE BOTONES MINIMALISTAS
                 for item in items_visuales:
-                    if item['tipo'] == 'tarea':
-                         html_celda += item['html_div']
-                    else:
-                        html_celda += f"<div style='background-color: {item['bg_color']}; color: white; padding: 2px 4px; border-radius: 3px; margin-bottom: 2px; font-size: 0.7em; white-space: nowrap; overflow: hidden;'>🏫 {item['titulo']}</div>"
-                
-                html_celda += "</div>"
-                
-                # RENDER FINAL
-                st.markdown(html_celda, unsafe_allow_html=True) # Cierre contenedor día
+                    icon = "▫️"
+                    if item['tipo'] == 'Clase': icon = "🎓"
+                    elif item['tipo'] == 'tarea': icon = item.get('msg_icon', "📝")
+                    elif item.get('es_rutina'): icon = "🔄"
+                    
+                    label_m = f"{icon}"
+                    title_full = item['titulo']
+                    
+                    # Key única mensual
+                    try: 
+                        s_id = str(item.get('id', item['titulo'])).replace(" ", "")
+                    except: s_id = "u"
+                    key_m = f"btn_m_{day_num}_{s_id}_{item['hora_sort']}"
+                    
+                    if st.button(label_m, key=key_m, help=f"{item['hora_sort']} - {title_full}", use_container_width=True):
+                        mostrar_detalle_item(item['raw'])
 
 
 if __name__ == "__main__":
