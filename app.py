@@ -1047,37 +1047,55 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 }
             }
 
-            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - MODO "PUNTOS/ICONOS" */
+            /* Ajustes ESPECÍFICOS VERTICAL (PORTRAIT) - CSS GRID REVOLUTION */
             @media (orientation: portrait) and (max-width: 600px) {
-                 /* Limpiamos margenes de dias */
+                 div[data-testid="stHorizontalBlock"] {
+                    display: grid !important;
+                    grid-template-columns: repeat(7, 1fr) !important;
+                    gap: 1px !important; /* Minima separacion */
+                    width: 100% !important;
+                    min-width: 0 !important;
+                 }
+                 
+                 div[data-testid="column"] {
+                    width: auto !important;
+                    min-width: 0 !important;
+                    max-width: none !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    flex: none !important; /* Desactivar flex en hijos */
+                 }
+                 
+                 /* Limpiamos margenes texto */
                  div[data-testid="column"] p, div[data-testid="column"] div, div[data-testid="column"] strong {
-                    font-size: 3vw !important; 
+                    font-size: 3.5vw !important; 
                     line-height: normal !important;
                     margin: 0 !important;
+                    padding: 0 !important;
                     text-align: center !important; 
                 }
                 
-                /* Botones: Convertir en "Puntos/Iconos" recortando el texto */
+                /* Botones: ICON ONLY MODE */
                 div[data-testid="stButton"] button {
-                    font-size: 3.5vw !important; /* Icono un poco mas grande */
+                    font-size: 4vw !important;
                     padding: 0px !important;
-                    min-height: 25px !important; /* Altura fija para el "punto" */
+                    min-height: 25px !important;
                     height: 25px !important;
                     width: 100% !important;
-                    border: none !important; /* Sin bordes para aspecto limpio */
-                    background-color: transparent !important; /* Opcional: transparente para ver solo icono */
+                    border: none !important;
+                    background-color: transparent !important;
+                    margin: 0 !important;
                 }
                  div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
-                    /* TRUCO: Recortar texto para dejar solo el primer caracter (Icono) */
                     width: 100% !important;
                     white-space: nowrap !important;
                     overflow: hidden !important;
-                    text-overflow: clip !important; /* Cortar, no puntos suspensivos */
+                    text-overflow: clip !important;
                     display: block !important;
-                    max-width: 1.5em !important; /* Solo cabe el emoji */
-                    margin: 0 auto !important; /* Centrado */
+                    max-width: 1.5em !important;
+                    margin: 0 auto !important;
                 }
             }
         }
@@ -1239,16 +1257,31 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
     # CSS HACK force horizontal
     st.markdown("""
         <style>
-            /* Ajustes PORTRAIT MENSUAL - MODO "PUNTOS/ICONOS" */
+            /* Ajustes PORTRAIT MENSUAL - CSS GRID */
             @media (orientation: portrait) and (max-width: 600px) {
+                 div[data-testid="stHorizontalBlock"] {
+                    display: grid !important;
+                    grid-template-columns: repeat(7, 1fr) !important;
+                    gap: 1px !important;
+                    width: 100% !important;
+                 }
+                  div[data-testid="column"] {
+                    width: auto !important;
+                    min-width: 0 !important;
+                    max-width: none !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    flex: none !important;
+                 }
+                
                  div[data-testid="stButton"] button {
                     padding: 0px !important;
                     background-color: transparent !important; 
                     border: none !important;
                     min-height: 20px !important;
                     height: 20px !important;
+                    margin: 0 !important;
                 }
-                 /* Cortar texto dejando solo icono */
                  div[data-testid="stButton"] button p {
                     font-size: 4vw !important;
                     padding: 0 !important;
