@@ -438,7 +438,7 @@ def main():
         render_vista_nueva_tarea()
     elif vista_actual == "➕ Nuevo Evento/Horario":
         render_vista_nuevo_horario()
-    elif vista_actual == "📋 Gestionar Todas":
+    elif vista_actual == "📋 Gestionar":
         render_vista_gestionar_todas(tareas)
 
 # --- IMPLEMENTACIÓN DE VISTAS ---
@@ -855,7 +855,7 @@ def main():
         fecha_seleccionada = st.date_input("Fecha Base", get_madrid_date())
         st.info(f"Mirando: **{fecha_seleccionada.strftime('%d %b')}**")
         
-        if st.button("🔄 Forzar Scrapeo Horario"):
+        if st.button("🔄 Actualizar Horario"):
             actualizar_horario_clases(force=True)
             st.rerun()
 
