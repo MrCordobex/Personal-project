@@ -1112,22 +1112,16 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
                     margin: 0 auto !important;
                 }
                 
-                /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) */
+                /* EXCEPCION: Restaurar layout normal dentro de los Diálogos (Popups) - FUERZA VERTICAL */
                 div[data-testid="stDialog"] div[data-testid="stHorizontalBlock"] {
                     display: flex !important;
-                    gap: 10px !important; 
-                    grid-template-columns: none !important;
+                    flex-direction: column !important; /* APILAR EN VERTICAL */
+                    gap: 5px !important; 
                 }
-                /* Columna 1 (Icono): Pequeña */
-                div[data-testid="stDialog"] div[data-testid="column"]:nth-child(1) {
-                    flex: 1 !important;
-                    width: auto !important;
-                    min-width: 0 !important;
-                }
-                /* Columna 2 (Titulo): Grande */
-                 div[data-testid="stDialog"] div[data-testid="column"]:nth-child(2) {
-                    flex: 5 !important;
-                    width: auto !important;
+                
+                div[data-testid="stDialog"] div[data-testid="column"] {
+                    width: 100% !important;
+                    flex: none !important;
                     min-width: 0 !important;
                 }
             }
