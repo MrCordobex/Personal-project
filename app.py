@@ -1039,7 +1039,8 @@ def render_vista_semanal(tareas, fecha_base, horario_dinamico, horario_clases_sc
             }
             /* Columnas flexibles que encogen */
             div[data-testid="column"] {
-                flex: 1 1 0 !important;
+                flex: 0 0 14.28% !important; /* EXACTAMENTE 1/7 */
+                max-width: 14.28% !important;
                 min-width: 0px !important;
                 padding: 0 !important;
             }
@@ -1229,9 +1230,10 @@ def render_vista_mensual(tareas, fecha_base, horario_dinamico, horario_clases_sc
                 gap: 1px !important;
             }
             div[data-testid="column"] {
-                flex: 1 1 0 !important;
+                flex: 0 0 14.28% !important;
+                max-width: 14.28% !important;
                 min-width: 0px !important;
-                padding: 0 !important;
+                padding: 0 1px !important;
             }
              div[data-testid="stButton"] button {
                 padding: 0px !important;
