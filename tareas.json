@@ -77,19 +77,6 @@
         "hora": null
     },
     {
-        "id": 1768572878,
-        "titulo": "Entrega II Visualizaci\u00f3n ",
-        "prioridad": "Importante",
-        "tipo": "Entrega",
-        "estado": "Completada",
-        "fecha": "2026-01-16",
-        "fecha_fin": "2026-01-22",
-        "dia_completo": true,
-        "hora": null,
-        "msg": "\u23f3 1d",
-        "urgente": true
-    },
-    {
         "id": 1769020777,
         "titulo": "Fin Plazo Beca Junta",
         "prioridad": "Urgente",
