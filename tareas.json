@@ -86,18 +86,5 @@
         "fecha_fin": "2026-01-22",
         "dia_completo": true,
         "hora": null
-    },
-    {
-        "id": 1768919726,
-        "titulo": "Correo Ruben",
-        "prioridad": "Urgente",
-        "tipo": "Estudio",
-        "estado": "Completada",
-        "fecha": "2026-01-20",
-        "fecha_fin": "2026-01-24",
-        "dia_completo": true,
-        "hora": null,
-        "msg": "\u23f3 3d",
-        "urgente": false
     }
 ]
