@@ -92,10 +92,12 @@
         "titulo": "Correo Ruben",
         "prioridad": "Urgente",
         "tipo": "Estudio",
-        "estado": "Pendiente",
+        "estado": "Completada",
         "fecha": "2026-01-20",
         "fecha_fin": "2026-01-24",
         "dia_completo": true,
-        "hora": null
+        "hora": null,
+        "msg": "\u23f3 3d",
+        "urgente": false
     }
 ]
