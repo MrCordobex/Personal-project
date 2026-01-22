@@ -16,17 +16,6 @@
         "hora_fin": "09:30"
     },
     {
-        "id": 1768473965,
-        "titulo": "Reuni\u00f3n SEMNI",
-        "ubicacion": "https://meet.google.com/kto-xqbi-ssp",
-        "tipo": "Evento",
-        "es_rutina": false,
-        "dias_semana": [],
-        "fecha": "2026-01-20",
-        "hora_inicio": "10:00",
-        "hora_fin": "11:00"
-    },
-    {
         "id": 1768474019,
         "titulo": "Caf\u00e9 con Diego",
         "ubicacion": "Loyola",
