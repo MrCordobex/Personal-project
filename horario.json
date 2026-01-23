@@ -102,5 +102,16 @@
         "fecha": "2026-01-22",
         "hora_inicio": "16:00",
         "hora_fin": "17:30"
+    },
+    {
+        "id": 1769209546,
+        "titulo": "Audiencia ACCUA",
+        "ubicacion": "Webex",
+        "tipo": "Evento",
+        "es_rutina": false,
+        "dias_semana": [],
+        "fecha": "2026-02-25",
+        "hora_inicio": "10:00",
+        "hora_fin": "10:45"
     }
 ]
