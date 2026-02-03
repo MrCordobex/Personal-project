@@ -57,19 +57,6 @@
         "hora": "23:00"
     },
     {
-        "id": 1768474548,
-        "titulo": "Entrega Machine Learning",
-        "prioridad": "Importante",
-        "tipo": "Entrega",
-        "estado": "Completada",
-        "fecha": "2026-01-15",
-        "fecha_fin": "2026-02-03",
-        "dia_completo": false,
-        "hora": "14:00",
-        "msg": "\ud83d\udfe0 Vence HOY",
-        "urgente": true
-    },
-    {
         "id": 1769020812,
         "titulo": "Fin Plazo Beca FPU",
         "prioridad": "Urgente",
