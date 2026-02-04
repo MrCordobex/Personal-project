@@ -1,18 +1,5 @@
 [
     {
-        "id": 1768473594,
-        "titulo": "Examen \u00c9tica",
-        "prioridad": "Importante",
-        "tipo": "Examen",
-        "estado": "Completada",
-        "fecha": "2026-02-04",
-        "fecha_fin": null,
-        "dia_completo": false,
-        "hora": "16:30",
-        "msg": "",
-        "urgente": false
-    },
-    {
         "id": 1768473699,
         "titulo": "Trabajos DeepLearning",
         "prioridad": "Importante",
