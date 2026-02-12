@@ -20,18 +20,5 @@
         "fecha_fin": "2026-02-14",
         "dia_completo": true,
         "hora": null
-    },
-    {
-        "id": 1770205647,
-        "titulo": "IA Agentes",
-        "prioridad": "Importante",
-        "tipo": "Entrega",
-        "estado": "Completada",
-        "fecha": "2026-02-04",
-        "fecha_fin": "2026-02-13",
-        "dia_completo": true,
-        "hora": null,
-        "msg": "\u23f3 1d",
-        "urgente": true
     }
 ]
