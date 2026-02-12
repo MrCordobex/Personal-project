@@ -26,10 +26,12 @@
         "titulo": "IA Agentes",
         "prioridad": "Importante",
         "tipo": "Entrega",
-        "estado": "Pendiente",
+        "estado": "Completada",
         "fecha": "2026-02-04",
         "fecha_fin": "2026-02-13",
         "dia_completo": true,
-        "hora": null
+        "hora": null,
+        "msg": "\u23f3 1d",
+        "urgente": true
     }
 ]
