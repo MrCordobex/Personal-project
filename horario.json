@@ -38,17 +38,6 @@
         "hora_fin": "17:00"
     },
     {
-        "id": 1768474261,
-        "titulo": "Ogathon",
-        "ubicacion": "Hotel Giralda Center",
-        "tipo": "Evento",
-        "es_rutina": false,
-        "dias_semana": [],
-        "fecha": "2026-01-23",
-        "hora_inicio": "08:30",
-        "hora_fin": "15:00"
-    },
-    {
         "id": 1768484646,
         "titulo": "C&P Mingo",
         "ubicacion": "Presente Perfecto",
