@@ -22,17 +22,6 @@
         "hora_fin": "10:45"
     },
     {
-        "id": 1769514163,
-        "titulo": "Reuni\u00f3n Mesa Stem",
-        "ubicacion": "Sal\u00f3n Actos",
-        "tipo": "Evento",
-        "es_rutina": false,
-        "dias_semana": [],
-        "fecha": "2026-02-02",
-        "hora_inicio": "11:00",
-        "hora_fin": "12:00"
-    },
-    {
         "id": 1771200783,
         "titulo": "CATEC",
         "ubicacion": "San Jos\u00e9 de la Rinconada",
