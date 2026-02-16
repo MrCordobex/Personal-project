@@ -44,17 +44,6 @@
         "hora_fin": "12:00"
     },
     {
-        "id": 1769685431,
-        "titulo": "Entrevista CATEC",
-        "ubicacion": "Teams",
-        "tipo": "Evento",
-        "es_rutina": false,
-        "dias_semana": [],
-        "fecha": "2026-02-04",
-        "hora_inicio": "13:30",
-        "hora_fin": "14:15"
-    },
-    {
         "id": 1771200783,
         "titulo": "CATEC",
         "ubicacion": "San Jos\u00e9 de la Rinconada",
