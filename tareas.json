@@ -9,18 +9,5 @@
         "fecha_fin": "2026-03-20",
         "dia_completo": false,
         "hora": "23:00"
-    },
-    {
-        "id": 1772130555,
-        "titulo": "Entregar MLOps tarea3",
-        "prioridad": "Normal",
-        "tipo": "Entrega",
-        "estado": "Completada",
-        "fecha": "2026-02-26",
-        "fecha_fin": "2026-03-06",
-        "dia_completo": false,
-        "hora": "23:00",
-        "msg": "\u23f3 5d",
-        "urgente": false
     }
 ]
