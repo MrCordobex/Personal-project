@@ -1,250 +1,18 @@
 [
     {
-        "asignatura": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "titulo": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-12",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Deep Learning - Grupo - Grupo A",
-        "titulo": "Deep Learning - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-13",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "titulo": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-14",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Deep Learning - Grupo - Grupo A",
-        "titulo": "Deep Learning - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-15",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Almacenamiento, visualización y procesamiento de datos - Grupo - Grupo A",
-        "titulo": "Almacenamiento, visualización y procesamiento de datos - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-16",
-        "hora": "16:00 - 17:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Deep Learning - Grupo - Grupo A",
-        "titulo": "Deep Learning - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-16",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Almacenamiento, visualización y procesamiento de datos - Grupo - Grupo A",
-        "titulo": "Almacenamiento, visualización y procesamiento de datos - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-17",
-        "hora": "11:00 - 15:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "titulo": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-19",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "titulo": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-21",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Productos y servicios de la IA - Grupo - Grupo A",
-        "titulo": "Productos y servicios de la IA - Grupo - Grupo A",
-        "aula": "Out Campus Sevilla (Out Campus Sevilla - Campus Sevilla)",
-        "fecha": "2026-01-23",
-        "hora": "09:30 - 16:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Almacenamiento, visualización y procesamiento de datos - Grupo - Grupo A",
-        "titulo": "Almacenamiento, visualización y procesamiento de datos - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-23",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "",
-        "titulo": "",
-        "aula": "Desconocido",
-        "fecha": "2026-01-28",
-        "hora": "Festividad de Santo Tomás de Aquino - Fiesta Comunidad Universitaria",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "titulo": "Inteligencia artificial generativa - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-01-26",
-        "hora": "17:00 - 21:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Trabajo fin de Máster en aulas - (Tipo Trabajo, Defensas: del 23",
-        "titulo": "Examen de Trabajo fin de Máster en aulas - (Tipo Trabajo, Defensas: del 23",
-        "aula": "01",
-        "fecha": "2026-01-30",
-        "hora": "09:00 - 10:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Optimización computacional avanzada en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Optimización computacional avanzada en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-02",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Machine Learning en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Machine Learning en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-03",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Ética y legislación en IA en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Ética y legislación en IA en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-04",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Almacenamiento, visualización y procesamiento de datos en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Almacenamiento, visualización y procesamiento de datos en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-05",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Metodología en investigación en IA en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Metodología en investigación en IA en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-06",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Deep Learning en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Deep Learning en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-10",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Productos y servicios de la IA en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Productos y servicios de la IA en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-12",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Examen de Inteligencia artificial generativa en aulas - (Tipo Escrito-Práctico)",
-        "titulo": "Examen de Inteligencia artificial generativa en aulas - (Tipo Escrito-Práctico)",
-        "aula": "Desconocido",
-        "fecha": "2026-02-13",
-        "hora": "17:30 - 20:30",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Control inteligente - Grupo - Grupo A",
-        "titulo": "Control inteligente - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-02-16",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
-        "titulo": "MLOps y AI BI - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-02-19",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
-        "titulo": "MLOps y AI BI - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-02-20",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "",
-        "titulo": "",
-        "aula": "Desconocido",
-        "fecha": "2026-02-28",
-        "hora": "Día de Andalucía - Fiesta Autonómica",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Control inteligente - Grupo - Grupo A",
-        "titulo": "Control inteligente - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-02-23",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Seguridad y criptografía con IA - Grupo - Grupo A",
-        "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-02-25",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
-        "titulo": "MLOps y AI BI - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-02-26",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Control inteligente - Grupo - Grupo A",
-        "titulo": "Control inteligente - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-03-02",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
         "asignatura": "Seguridad y criptografía con IA - Grupo - Grupo A",
         "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-04",
-        "hora": "18:00 - 22:00",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-05",
+        "hora": "15:10 - 16:40",
         "dia_completo": false
     },
     {
@@ -252,15 +20,7 @@
         "titulo": "MLOps y AI BI - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-05",
-        "hora": "18:00 - 22:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Control inteligente - Grupo - Grupo A",
-        "titulo": "Control inteligente - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-03-09",
-        "hora": "18:00 - 22:00",
+        "hora": "17:00 - 21:00",
         "dia_completo": false
     },
     {
@@ -268,23 +28,23 @@
         "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-11",
-        "hora": "18:00 - 22:00",
+        "hora": "16:00 - 20:00",
         "dia_completo": false
     },
     {
-        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
-        "titulo": "MLOps y AI BI - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-12",
-        "hora": "18:00 - 22:00",
+        "hora": "17:00 - 21:00",
         "dia_completo": false
     },
     {
-        "asignatura": "",
-        "titulo": "",
-        "aula": "Desconocido",
-        "fecha": "2026-03-16",
-        "hora": "Canonización de San Ignacio - Fiesta Universidad Loyola Andalucía",
+        "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-13",
+        "hora": "16:00 - 20:00",
         "dia_completo": false
     },
     {
@@ -292,7 +52,23 @@
         "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-17",
-        "hora": "18:00 - 22:00",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
+        "titulo": "MLOps y AI BI - Grupo - Grupo A",
+        "aula": "Aula C2.01 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-18",
+        "hora": "10:00 - 13:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-18",
+        "hora": "15:00 - 16:30",
         "dia_completo": false
     },
     {
@@ -300,15 +76,31 @@
         "titulo": "Visión artificial avanzada - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-18",
-        "hora": "18:00 - 22:00",
+        "hora": "17:00 - 21:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-19",
+        "hora": "15:00 - 16:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-19",
+        "hora": "17:00 - 21:00",
         "dia_completo": false
     },
     {
         "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
         "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-03-19",
-        "hora": "18:00 - 22:00",
+        "fecha": "2026-03-20",
+        "hora": "16:00 - 20:00",
         "dia_completo": false
     },
     {
@@ -316,15 +108,7 @@
         "titulo": "MLOps y AI BI - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-21",
-        "hora": "11:00 - 15:00",
-        "dia_completo": false
-    },
-    {
-        "asignatura": "Control inteligente - Grupo - Grupo A",
-        "titulo": "Control inteligente - Grupo - Grupo A",
-        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-03-23",
-        "hora": "18:00 - 22:00",
+        "hora": "09:30 - 13:30",
         "dia_completo": false
     },
     {
@@ -332,7 +116,31 @@
         "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-24",
-        "hora": "18:00 - 22:00",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-24",
+        "hora": "17:00 - 21:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
+        "titulo": "MLOps y AI BI - Grupo - Grupo A",
+        "aula": "Aula C2.01 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-25",
+        "hora": "10:00 - 13:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-25",
+        "hora": "15:00 - 16:30",
         "dia_completo": false
     },
     {
@@ -340,31 +148,287 @@
         "titulo": "Visión artificial avanzada - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
         "fecha": "2026-03-25",
-        "hora": "18:00 - 22:00",
+        "hora": "17:00 - 21:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-26",
+        "hora": "15:00 - 16:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-26",
+        "hora": "17:00 - 21:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-03-27",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "aula": "Aula C2.04 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-06",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-07",
+        "hora": "14:00 - 15:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Visión artificial avanzada - Grupo - Grupo A",
+        "titulo": "Visión artificial avanzada - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-07",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Seguridad y criptografía con IA - Grupo - Grupo A",
+        "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-08",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-09",
+        "hora": "14:00 - 15:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-09",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "aula": "Aula C2.06 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-13",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Seguridad y criptografía con IA - Grupo - Grupo A",
+        "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-15",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-16",
+        "hora": "14:00 - 15:30",
         "dia_completo": false
     },
     {
         "asignatura": "MLOps y AI BI - Grupo - Grupo A",
         "titulo": "MLOps y AI BI - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-03-26",
-        "hora": "18:00 - 22:00",
+        "fecha": "2026-04-16",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-17",
+        "hora": "14:00 - 15:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Visión artificial avanzada - Grupo - Grupo A",
+        "titulo": "Visión artificial avanzada - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-17",
+        "hora": "16:00 - 20:00",
         "dia_completo": false
     },
     {
         "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
         "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
         "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
-        "fecha": "2026-03-27",
-        "hora": "18:00 - 22:00",
+        "fecha": "2026-04-27",
+        "hora": "15:00 - 19:00",
         "dia_completo": false
     },
     {
-        "asignatura": "",
-        "titulo": "",
-        "aula": "Desconocido",
-        "fecha": "2026-03-30",
-        "hora": "Vacaciones de Semana Santa",
+        "asignatura": "Seguridad y criptografía con IA - Grupo - Grupo A",
+        "titulo": "Seguridad y criptografía con IA - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-29",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-30",
+        "hora": "14:00 - 15:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-04-30",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-04",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-05",
+        "hora": "14:00 - 15:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Visión artificial avanzada - Grupo - Grupo A",
+        "titulo": "Visión artificial avanzada - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-05",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
+        "titulo": "MLOps y AI BI - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-07",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-11",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-12",
+        "hora": "14:00 - 15:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Visión artificial avanzada - Grupo - Grupo A",
+        "titulo": "Visión artificial avanzada - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-12",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
+        "titulo": "MLOps y AI BI - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-14",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
+        "titulo": "MLOps y AI BI - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-16",
+        "hora": "08:30 - 12:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
+        "titulo": "MLOps y AI BI - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-18",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-19",
+        "hora": "14:00 - 15:30",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Visión artificial avanzada - Grupo - Grupo A",
+        "titulo": "Visión artificial avanzada - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-19",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Robótica inteligente - Grupo - Grupo A",
+        "titulo": "Robótica inteligente - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-21",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Control inteligente - Grupo - Grupo A",
+        "titulo": "Control inteligente - Grupo - Grupo A",
+        "aula": "A-1.11 Laboratorio de Robótica y Automática (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-21",
+        "hora": "16:00 - 20:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "titulo": "Métodos avanzados en Machine Learning - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-22",
+        "hora": "15:00 - 19:00",
+        "dia_completo": false
+    },
+    {
+        "asignatura": "MLOps y AI BI - Grupo - Grupo A",
+        "titulo": "MLOps y AI BI - Grupo - Grupo A",
+        "aula": "Aula C2.07 (Edificio Central - Campus Sevilla)",
+        "fecha": "2026-05-23",
+        "hora": "08:30 - 12:30",
         "dia_completo": false
     }
 ]
