@@ -1,0 +1,110 @@
+[
+    {
+        "titulo": "SEVILLA FC vs RAYO VALLECANO",
+        "asignatura": "Fútbol",
+        "aula": "Casa",
+        "fecha": "2026-03-08",
+        "hora": "18:30",
+        "dia_completo": false,
+        "es_futbol": true
+    },
+    {
+        "titulo": "FC BARCELONA vs SEVILLA FC",
+        "asignatura": "Fútbol",
+        "aula": "Fuera",
+        "fecha": "2026-03-15",
+        "hora": "16:15",
+        "dia_completo": false,
+        "es_futbol": true
+    },
+    {
+        "titulo": "SEVILLA FC vs VALENCIA CF",
+        "asignatura": "Fútbol",
+        "aula": "Casa",
+        "fecha": "2026-03-21",
+        "hora": "21:00",
+        "dia_completo": false,
+        "es_futbol": true
+    },
+    {
+        "titulo": "REAL OVIEDO vs SEVILLA FC",
+        "asignatura": "Fútbol",
+        "aula": "Fuera",
+        "fecha": "2026-04-05",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "SEVILLA FC vs ATLÉTICO DE MADRID",
+        "asignatura": "Fútbol",
+        "aula": "Casa",
+        "fecha": "2026-04-12",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "LEVANTE UD vs SEVILLA FC",
+        "asignatura": "Fútbol",
+        "aula": "Fuera",
+        "fecha": "2026-04-22",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "CA OSASUNA vs SEVILLA FC",
+        "asignatura": "Fútbol",
+        "aula": "Fuera",
+        "fecha": "2026-04-26",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "SEVILLA FC vs REAL SOCIEDAD",
+        "asignatura": "Fútbol",
+        "aula": "Casa",
+        "fecha": "2026-05-03",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "SEVILLA FC vs RCD ESPANYOL DE BARCELONA",
+        "asignatura": "Fútbol",
+        "aula": "Casa",
+        "fecha": "2026-05-10",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "VILLARREAL CF vs SEVILLA FC",
+        "asignatura": "Fútbol",
+        "aula": "Fuera",
+        "fecha": "2026-05-13",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "SEVILLA FC vs REAL MADRID",
+        "asignatura": "Fútbol",
+        "aula": "Casa",
+        "fecha": "2026-05-17",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    },
+    {
+        "titulo": "CELTA vs SEVILLA FC",
+        "asignatura": "Fútbol",
+        "aula": "Fuera",
+        "fecha": "2026-05-24",
+        "hora": null,
+        "dia_completo": true,
+        "es_futbol": true
+    }
+]
